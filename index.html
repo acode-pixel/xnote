@@ -158,6 +158,8 @@
             $(element).toggleClass("is-outlined");
           } else {
             $('#notif-area').append('<div class="notification is-danger" style="width: 400px"><button class="delete" onclick="close_noti(this)"></button>Operation Failed</div>');
+            $(element).toggleClass("is-loading");
+            $(element).toggleClass("is-outlined");
           }
         });
       }
