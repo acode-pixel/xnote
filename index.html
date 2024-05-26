@@ -137,7 +137,13 @@
   </footer>!-->
 
   </body>
+  <div class="section" id="notif-area" style="width: 400px; float: right; margin-right: 50px; z-index: 31; position: relative; top: -550px;"></div>
+
   <script>
+    function close_noti(element){
+      $(element).parent().fadeOut();
+    }
+
     function button(element){
       $(element).toggleClass("is-loading");
       $(element).toggleClass("is-outlined");
@@ -147,15 +153,14 @@
       } else if($(element).attr("id") == "addFolder"){
         $.get("command", {cmd: "create_folder"}, (data, status) => {
           if(status == "success"){
-            
+            $('#notif-area').append('<div class="notification is-success" style="width: 400px;"><button class="delete" onclick="close_noti(this)"></button>Operation Completed</div>');
+            $(element).toggleClass("is-loading");
+            $(element).toggleClass("is-outlined");
+          } else {
+            $('#notif-area').append('<div class="notification is-danger" style="width: 400px"><button class="delete" onclick="close_noti(this)"></button>Operation Failed</div>');
           }
         });
       }
-
-      setTimeout(function(){
-        $(element).toggleClass("is-loading");
-        $(element).toggleClass("is-outlined");
-      }, 2000);
     }
 
     function menu(burger){
