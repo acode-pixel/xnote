@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="//code.iconify.design/1/1.0.6/iconify.min.js"></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hello Bulma!</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
+  </head>
+  <body>
+
+    <nav class="navbar is-flex-mobile" role="navigation" aria-label="main navigation">
+      <div class="navbar-brand">
+        <h1 class="navbar-item">Xnote</h1>
+        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample" onclick="menu(this)">
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+      </div>
+    
+      <div id="navbarBasicExample" class="navbar-menu">
+        <div class="navbar-start">
+          <a class="navbar-item is-active" href="/">
+            Home
+          </a>
+    
+          <a class="navbar-item" href="/Doc.html">
+            Documentation
+          </a>
+    
+          <div class="navbar-item has-dropdown is-hoverable">
+            <a class="navbar-link">
+              More
+            </a>
+    
+            <div class="navbar-dropdown">
+              <a class="navbar-item">
+                About
+              </a>
+              <a class="navbar-item">
+                Jobs
+              </a>
+              <a class="navbar-item">
+                Contact
+              </a>
+              <hr class="navbar-divider">
+              <a class="navbar-item">
+                Report an issue
+              </a>
+            </div>
+          </div>
+        </div>
+    
+        <div class="navbar-end">
+          <div class="navbar-item">
+            <div class="buttons">
+              <a class="button is-link">
+                <strong>Sign up</strong>
+              </a>
+              <a class="button is-light">
+                Log in
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+  <section class="section">
+    <div class="container">
+      <h1 class="title">
+        Untitled Folder
+        <button class="button is-text is-medium" onclick="button(this)" id="addFolder">
+          <span class="iconify mdi icon" data-icon="mdi-plus-box-multiple"></span>
+        </button>
+      </h1>
+      <hr>
+      <button class="button is-link is-outlined" onclick="button(this)" id="addNote">
+        <span class="iconify mdi icon-text" data-icon="mdi-plus"></span>
+        Add Note
+      </button>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="columns">
+        <div class="column is-one-third">
+          <div class="card">
+            <header class="card-header">
+              <p class="card-header-title">Component</p>
+            </header>
+            <div class="card-content">
+              <div class="content">
+                Test
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="column is-one-third">
+          <div class="card">
+            <header class="card-header">
+              <p class="card-header-title">Component</p>
+            </header>
+            <div class="card-content">
+              <div class="content">
+                Test
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="column is-one-third">
+          <div class="card">
+            <header class="card-header">
+              <p class="card-header-title">Component</p>
+            </header>
+            <div class="card-content">
+              <div class="content">
+                Test
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!--<footer class="footer">
+    <div class="content has-text-centered">
+      <p>
+        <strong>Xnote</strong> by <a href="https://github.com/acode-pixel">acode-pixel</a>.
+      </p>
+    </div>
+  </footer>!-->
+
+  </body>
+  <script>
+    function button(element){
+      $(element).toggleClass("is-loading");
+      $(element).toggleClass("is-outlined");
+
+      if($(element).attr("id") == "addNote"){
+        $.get("command", {cmd: "create"});
+      } else if($(element).attr("id") == "addFolder"){
+        $.get("command", {cmd: "create_folder"}, (data, status) => {
+          if(status == "success"){
+            
+          }
+        });
+      }
+
+      setTimeout(function(){
+        $(element).toggleClass("is-loading");
+        $(element).toggleClass("is-outlined");
+      }, 2000);
+    }
+
+    function menu(burger){
+      var menu = document.getElementById("navbarBasicExample");
+      $(menu).fadeToggle(function(){
+        menu.style.removeProperty("display");
+      });
+      $(menu).toggleClass("is-active");
+      $(burger).toggleClass("is-active");
+    }
+  </script>
+</html>
