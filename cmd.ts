@@ -2,6 +2,13 @@
 import http from "http";
 import mysql from "mysql2";
 import crypto from "crypto";
+import exp from "express";
+
+declare module 'express-session' {
+    interface SessionData {
+      folders: string;
+    }
+  }
 
 var con = mysql.createConnection({
     host: "127.0.0.1",
@@ -20,27 +27,31 @@ con.query("use xnote_db", function(err){
     console.log("using xnote_db");
 });
 
-function errCallback(err: any){
-    if(err){
-        throw err;
-    }
-}
-
-function command_parser(query : URLSearchParams, res : http.ServerResponse){
+function command_parser(query : URLSearchParams, res : exp.Response, req : exp.Request){
     if(query.get("cmd") == "create_folder"){
         try{
-            con.query("create table if not exists test (noteID varchar(20), noteTitle tinytext, note mediumtext)", errCallback);
+            con.query("create table if not exists " + query.get("title") + " (noteID varchar(20), noteTitle tinytext, note mediumtext)");
         }
-        catch {
+        catch (err){
+            console.log(err);
             res.writeHead(500);
             res.end();
         }
         finally{
             if(!res.closed){
+                req.session.folders = "test";
                 res.writeHead(200);
                 res.end();
             }
         }
+    } else if(query.get("cmd") == "update"){
+        var data = {"hasUpdate": null};
+        res.writeHead(200);
+        res.write(JSON.stringify(data));
+        res.end();
+    } else {
+        res.writeHead(400);
+        res.end();
     }
 }
 
