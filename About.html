@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Hello Bulma!</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
+    <link rel="stylesheet" href="style.css">
   </head>
   <body>
 
@@ -26,8 +27,8 @@
             Home
           </a>
     
-          <a class="navbar-item is-active" href="/Doc">
-            Documentation
+          <a class="navbar-item is-active" href="/About">
+            About
           </a>
     
           <div class="navbar-item has-dropdown is-hoverable">
@@ -37,17 +38,10 @@
     
             <div class="navbar-dropdown">
               <a class="navbar-item">
-                About
+                About the dev
               </a>
               <a class="navbar-item">
-                Jobs
-              </a>
-              <a class="navbar-item">
-                Contact
-              </a>
-              <hr class="navbar-divider">
-              <a class="navbar-item">
-                Report an issue
+                Roadmap
               </a>
             </div>
           </div>
@@ -56,7 +50,7 @@
         <div class="navbar-end">
           <div class="navbar-item">
             <div class="buttons">
-              <a class="button is-primary">
+              <a class="button is-link">
                 <strong>Sign up</strong>
               </a>
               <a class="button is-light">
@@ -71,32 +65,16 @@
   <section class="section">
     <div class="container">
       <h1 class="title">
-        Hello World
+      Wlcome to Xnote ❤!
       </h1>
       <p class="subtitle">
-        My first website with <strong>Bulma</strong>!
+        <strong>A note app made with bulma.</strong>
       </p>
-      <button class="button is-primary is-outlined" onclick="button(this)">Button</button>
-      <button class="button is-warning is-outlined" onclick="button(this)">Button</button>
-      <button class="button is-link is-outlined" onclick="button(this)">Button</button>
-      <button class="button is-info is-outlined" onclick="button(this)">Button</button>
-      <button class="button is-danger is-outlined" onclick="button(this)">Button</button>
-      <button class="button is-success is-outlined" onclick="button(this)">Button</button>
     </div>
   </section>
 
   </body>
   <script>
-    function button(element){
-      $(element).toggleClass("is-loading");
-      $(element).toggleClass("is-outlined");
-
-      setTimeout(function(){
-        $(element).toggleClass("is-loading");
-        $(element).toggleClass("is-outlined");
-      }, 2000);
-    }
-
     function menu(burger){
       var menu = document.getElementById("navbarBasicExample");
       $(menu).fadeToggle(function(){

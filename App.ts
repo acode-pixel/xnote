@@ -36,8 +36,8 @@ app.get("/command", (req : exp.Request, res : exp.Response) => {
     cmd.command_parser(url.searchParams, res, req);
 });
 
-app.get("/Doc.html", (req : exp.Request, res : exp.Response) => {
-    fs.readFile("./Doc.html", (err, data) => {
+app.get("/About", (req : exp.Request, res : exp.Response) => {
+    fs.readFile("./About.html", (err, data) => {
         res.writeHead(200, {"Content-type": "text/html"});
         res.write(data);
         res.end();
