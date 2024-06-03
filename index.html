@@ -1,3 +1,4 @@
+<!--TODO remove doc folder-->
 <!DOCTYPE html>
 <html>
   <head>
@@ -274,9 +275,9 @@
         }
       }
 
-      $.get("command", {cmd: "update"}, update);
       $(element).toggleClass("is-loading");
       $(element).toggleClass("is-outlined");
+      setTimeout(function(){$.get("command", {cmd: "update"}, update)}, 200);
     }
 
     function menu(burger){
