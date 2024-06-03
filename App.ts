@@ -45,5 +45,14 @@ app.get("/Doc.html", (req : exp.Request, res : exp.Response) => {
 )
 });
 
+app.get("/style.css", (req : exp.Request, res : exp.Response) => {
+    fs.readFile("./style.css", (err, data) => {
+        res.writeHead(200, {"Content-type": "text/css"});
+        res.write(data);
+        res.end();
+    }
+)
+});
+
 app.listen(8080);
 console.log("Listening on http://127.0.0.1:8080/");
