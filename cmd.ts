@@ -12,7 +12,7 @@ declare module 'express-session' {
 var con = mysql.createConnection({
     host: "127.0.0.1",
     user: "root",
-    password: ""
+    password: "donald1417"
 });
 
 function reconnect_db(con : any){
@@ -74,7 +74,7 @@ function command_parser(query : URLSearchParams, res : exp.Response, req : exp.R
     } else if(query.get("cmd") == "update"){
         var data = get_session_data(req);
         res.writeHead(200);
-        res.write(JSON.stringify(data));
+        res.write(JSON.stringify(data) || "");
         res.end();
     } else {
         res.writeHead(400);
