@@ -1,7 +1,7 @@
 import fs from "fs";
-import url from "url";
 import exp from "express";
 import exps from "express-session";
+const MemoryStore = require('memorystore')(exps);
 import {v4 as uuidv4} from 'uuid';
 
 var cmd = require("./cmd");
@@ -16,7 +16,10 @@ app.use(exps(
       secret: 'Secret1234',
       resave: false,
       saveUninitialized: false,
-      cookie: { secure: false }
+      cookie: { secure: false },
+      store: new MemoryStore({
+        checkPeriod: 86400000 // prune expired entries every 24h
+      })
     }));
 
 app.get("/", (req : exp.Request, res : exp.Response) => {
@@ -33,9 +36,18 @@ app.get("/command", (req : exp.Request, res : exp.Response) => {
     cmd.command_parser(url.searchParams, res, req);
 });
 
-app.get("/Doc.html", (req : exp.Request, res : exp.Response) => {
-    fs.readFile("./Doc.html", (err, data) => {
+app.get("/About", (req : exp.Request, res : exp.Response) => {
+    fs.readFile("./About.html", (err, data) => {
         res.writeHead(200, {"Content-type": "text/html"});
+        res.write(data);
+        res.end();
+    }
+)
+});
+
+app.get("/style.css", (req : exp.Request, res : exp.Response) => {
+    fs.readFile("./style.css", (err, data) => {
+        res.writeHead(200, {"Content-type": "text/css"});
         res.write(data);
         res.end();
     }

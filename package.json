@@ -2,6 +2,7 @@
   "dependencies": {
     "express": "^4.19.2",
     "express-session": "^1.18.0",
+    "memorystore": "^1.6.7",
     "mysql2": "^3.9.7",
     "ts-node": "^10.9.2",
     "uuid": "^9.0.1"

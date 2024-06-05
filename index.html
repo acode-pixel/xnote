@@ -1,3 +1,4 @@
+<!--TODO remove doc folder-->
 <!DOCTYPE html>
 <html>
   <head>
@@ -7,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Hello Bulma!</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
-    <!--<link rel="stylesheet" href="./style.css" type="text/css">!-->
+    <link rel="stylesheet" href="style.css">
   </head>
   <body>
 
@@ -28,8 +29,8 @@
             Home
           </a>
     
-          <a class="navbar-item" href="/Doc.html">
-            Documentation
+          <a class="navbar-item" href="/About">
+            About
           </a>
     
           <div class="navbar-item has-dropdown is-hoverable">
@@ -39,17 +40,10 @@
     
             <div class="navbar-dropdown">
               <a class="navbar-item">
-                About
+                About the dev
               </a>
               <a class="navbar-item">
-                Jobs
-              </a>
-              <a class="navbar-item">
-                Contact
-              </a>
-              <hr class="navbar-divider">
-              <a class="navbar-item">
-                Report an issue
+                Roadmap
               </a>
             </div>
           </div>
@@ -70,150 +64,69 @@
       </div>
     </nav>
 
-  <section class="section">
-    <section class="section">
-      <div class="container">
-        <h1 class="title">
-          Untitled Folder
-          <button class="button js-modal-trigger" onclick="$('#change-title').toggleClass('is-active')" id="addFolder">
-            <span class="iconify mdi icon mdi-24px" data-icon="mdi-plus-box-multiple"></span>
-          </button>
-        </h1>
-        <hr>
-        <button class="button is-link is-outlined" id="addNote">
-          <span class="iconify mdi icon-text" data-icon="mdi-plus"></span>
-          Add Note
-        </button>
-      </div>
-      <div class="modal" id="change-title">
-        <div class="modal-background"></div>
-        <div class="modal-card">
-          <header class="modal-card-head">
-            <p class="modal-card-title">Folder title</p>
-            <button class="delete" aria-label="close" onclick="$('#change-title').toggleClass('is-active')"></button>
-          </header>
-          <section class="modal-card-body">
-            <input class="input" type="text" placeholder="Folder Title" id="title" maxlength="12">
-            <article class="message is-danger" id="invalid-title-msg">
-              <div class="message-body">
-                Avoid using any special characters or spaces in the title and try again.
-              </div>
-            </article>
-          </section>
-          <footer class="modal-card-foot">
-            <div class="buttons">
-              <button class="button is-success is-outlined" onclick="button(this)" id="saveTitle">Save changes</button>
-              <button class="button" onclick="$('#change-title').toggleClass('is-active')">Cancel</button>
-            </div>
-          </footer>
-        </div>
-      </div>
-    </section>
-  
-    <section class="section">
-      <div class="container">
-        <div class="columns">
-          <div class="column is-one-third">
-            <div class="card">
-              <header class="card-header">
-                <p class="card-header-title">Component</p>
+    <div id="main-ui">
+      <section class="section" id="UntitledFolder">
+        <!--Folder title area-->
+        <section class="section">
+          <div class="container">
+            <h1 class="title" id="folder-title">
+              Untitled Folder
+              <button class="button js-modal-trigger" onclick="$('#change-title').toggleClass('is-active')" id="addFolder">
+                <span class="iconify mdi icon mdi-24px" data-icon="mdi-plus-box-multiple"></span>
+              </button>
+            </h1>
+            <hr>
+            <button class="button is-link" id="addNote" disabled> <!--add is-outlined when active-->
+              <span class="iconify mdi icon-text" data-icon="mdi-plus"></span>
+              Add Note
+            </button>
+          </div>
+          <div class="modal" id="change-title">
+            <div class="modal-background"></div>
+            <div class="modal-card">
+              <header class="modal-card-head">
+                <p class="modal-card-title">Folder title</p>
+                <button class="delete" aria-label="close" onclick="$('#change-title').toggleClass('is-active')"></button>
               </header>
-              <div class="card-content">
-                <div class="content">
-                  Test
+              <section class="modal-card-body">
+                <input class="input" type="text" placeholder="Folder Title" id="title" maxlength="12">
+                <article class="message is-danger" id="invalid-title-msg">
+                  <div class="message-body">
+                    Avoid using any special characters or spaces in the title and try again.
+                  </div>
+                </article>
+              </section>
+              <footer class="modal-card-foot">
+                <div class="buttons">
+                  <button class="button is-success is-outlined" onclick="button(this)" id="createTitle">Save changes</button>
+                  <button class="button" onclick="$('#change-title').toggleClass('is-active')">Cancel</button>
+                </div>
+              </footer>
+            </div>
+          </div>
+        </section>
+      
+        <!--Notes area-->
+        <section class="section">
+          <div class="container">
+            <div class="columns">
+              <div class="column is-one-third">
+                <div class="card">
+                  <header class="card-header">
+                    <p class="card-header-title">Component</p>
+                  </header>
+                  <div class="card-content">
+                    <div class="content">
+                      Test
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="column is-one-third">
-            <div class="card">
-              <header class="card-header">
-                <p class="card-header-title">Component</p>
-              </header>
-              <div class="card-content">
-                <div class="content">
-                  Test
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="column is-one-third">
-            <div class="card">
-              <header class="card-header">
-                <p class="card-header-title">Component</p>
-              </header>
-              <div class="card-content">
-                <div class="content">
-                  Test
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  </section>
-
-  <section class="section">
-    <section class="section">
-      <div class="container">
-        <h1 class="title">
-          Untitled Folder
-          <button class="button" onclick="button(this)" id="addFolder">
-            <span class="iconify mdi icon mdi-24px" data-icon="mdi-plus-box-multiple"></span>
-          </button>
-        </h1>
-        <hr>
-        <button class="button is-link is-outlined" onclick="button(this)" id="addNote">
-          <span class="iconify mdi icon-text" data-icon="mdi-plus"></span>
-          Add Note
-        </button>
-      </div>
-    </section>
-  
-    <section class="section">
-      <div class="container">
-        <div class="columns">
-          <div class="column is-one-third">
-            <div class="card">
-              <header class="card-header">
-                <p class="card-header-title">Component</p>
-              </header>
-              <div class="card-content">
-                <div class="content">
-                  Test
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="column is-one-third">
-            <div class="card">
-              <header class="card-header">
-                <p class="card-header-title">Component</p>
-              </header>
-              <div class="card-content">
-                <div class="content">
-                  Test
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="column is-one-third">
-            <div class="card">
-              <header class="card-header">
-                <p class="card-header-title">Component</p>
-              </header>
-              <div class="card-content">
-                <div class="content">
-                  Test
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  </section>
+        </section>
+      </section>
+    </div>
 
   <!--<footer class="footer">
     <div class="content has-text-centered">
@@ -224,7 +137,8 @@
   </footer>!-->
 
   </body>
-  <div class="section is-flex-mobile" id="notif-area" style="font-size: 125%; flex-direction: column-reverse; margin-right: -10px; z-index: 31; position: fixed; top: -30px; right: 1px;"></div>
+  <div class="section is-flex-mobile" id="notif-area" style="font-size: 125%; flex-direction: column-reverse; margin-right: -10px; z-index: 100; position: fixed; top: 40px; right: 1px;">
+  </div>
 
   <script>
     $("#invalid-title-msg").slideToggle();
@@ -249,10 +163,42 @@
       if(data.hasUpdate){
         $('#notif-area').append('<div class="notification is-success"><button class="delete" onclick="close_noti(this)"></button>Update Completed   <span class="iconify mdi mdi-24px" data-icon="mdi-check-circle"></span></div>');
       };
-      console.log(data);
     }
 
-    $.get("command", {cmd: "update"}, update);
+    function add_folder_ui(folderName){
+      var folder = $("#UntitledFolder").clone();
+      var folder_button = $(folder).find("#addFolder").clone();
+      $(folder_button).attr({"id": "delFolder"});
+      $(folder_button).children().remove();
+      $(folder_button).append('<span class="iconify mdi icon mdi-24px" data-icon="mdi-folder-remove"></span');
+            
+      $(folder).attr({"id": folderName});
+      $(folder).find("#folder-title").text(folderName + " ");
+      $(folder).find("#addNote").addClass("is-outlined").removeAttr("disabled");
+      $(folder).find("#folder-title").append(folder_button);
+      $("#UntitledFolder").before(folder);
+    }
+
+    function update_ui(){
+      var data;
+      var xhr = $.get("command", {cmd: "update"}, update).done(
+        function(){
+        data = JSON.parse(xhr.responseText);
+        console.log(data);
+        if(data.hasUpdate){
+          var folderName = data.folders[data.folders.length - 1];
+          add_folder_ui(folderName);
+        }else {
+          data.folders.forEach((val, index, array) => {
+            if(!document.getElementById(val))
+              add_folder_ui(val);
+          });
+        }
+      }
+      );
+    }
+
+    update_ui();
 
     $.ajaxSetup({success: success_parser, error: error_parser});
 
@@ -262,7 +208,7 @@
 
       if($(element).attr("id") == "addNote"){
         $.get("command", {cmd: "create"});
-      } else if($(element).attr("id") == "saveTitle"){
+      } else if($(element).attr("id") == "createTitle"){
         var iname = document.getElementById("title").value;
         let regex = /[^0-9A-Z]/i;
         if(!regex.test(iname)){
@@ -274,9 +220,9 @@
         }
       }
 
-      $.get("command", {cmd: "update"}, update);
       $(element).toggleClass("is-loading");
       $(element).toggleClass("is-outlined");
+      setTimeout(update_ui, 200);
     }
 
     function menu(burger){
