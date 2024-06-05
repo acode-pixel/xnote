@@ -43,11 +43,17 @@ con.query("use xnote_db", function(err){
 
 function command_parser(query : URLSearchParams, res : exp.Response, req : exp.Request){
     if(query.get("cmd") == "create_folder"){
-        if(req.session.folders?.find(folder => folder === query.get("title")) == undefined){
-
+        if(req.session.folders?.find(folder => folder === query.get("title")) == undefined && query.get("title")){
+            let regex = /[^0-9A-Z ]/i;
+            if(regex.test(query.get("title") || "")){
+                res.writeHead(500);
+                res.end();
+                return;
+            }
             try {
-                con.query("create table " + query.get("title") + " (noteID varchar(20), noteTitle tinytext, note mediumtext)");
+                con.query("create table `" + query.get("title") + "` (noteID varchar(20), noteTitle tinytext, note mediumtext)");
             } catch (err){
+                console.log(err);
                 res.writeHead(500);
                 res.end();
                 res.emit("close");

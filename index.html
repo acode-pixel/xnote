@@ -210,11 +210,12 @@
         $.get("command", {cmd: "create"});
       } else if($(element).attr("id") == "createTitle"){
         var iname = document.getElementById("title").value;
-        let regex = /[^0-9A-Z]/i;
+        let regex = /[^0-9A-Z ]/i;
         if(!regex.test(iname)){
           $.get("command", {cmd: "create_folder", title: iname});
           $("#change-title").toggleClass("is-active");
           $("#invalid-title-msg").slideUp();
+          $("#title").text("");
         } else {
           $("#invalid-title-msg").slideDown();
         }
