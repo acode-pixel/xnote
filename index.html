@@ -165,6 +165,20 @@
       };
     }
 
+    function add_folder_ui(folderName){
+      var folder = $("#UntitledFolder").clone();
+      var folder_button = $(folder).find("#addFolder").clone();
+      $(folder_button).attr({"id": "delFolder"});
+      $(folder_button).children().remove();
+      $(folder_button).append('<span class="iconify mdi icon mdi-24px" data-icon="mdi-folder-remove"></span');
+            
+      $(folder).attr({"id": folderName});
+      $(folder).find("#folder-title").text(folderName + " ");
+      $(folder).find("#addNote").addClass("is-outlined").removeAttr("disabled");
+      $(folder).find("#folder-title").append(folder_button);
+      $("#UntitledFolder").before(folder);
+    }
+
     function update_ui(){
       var data;
       var xhr = $.get("command", {cmd: "update"}, update).done(
@@ -173,13 +187,12 @@
         console.log(data);
         if(data.hasUpdate){
           var folderName = data.folders[data.folders.length - 1];
-          var folder = $("#UntitledFolder").clone();
-          $(folder).attr({"id": folderName});
-          $(folder).find("#folder-title").text(folderName);
-          $(folder).find("#addNote").addClass("is-outlined").removeAttr("disabled");
-          $("#UntitledFolder").before(folder);
+          add_folder_ui(folderName);
         }else {
-          console.log("function not implemented");
+          data.folders.forEach((val, index, array) => {
+            if(!document.getElementById(val))
+              add_folder_ui(val);
+          });
         }
       }
       );

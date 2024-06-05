@@ -21,6 +21,11 @@ function reconnect_db(con : any){
         user: "root",
         password: ""
     });
+
+    con.connect(function(err : any) {
+        if(err) throw err;
+        console.log("mysql DB connected");
+    });
 }
 
 con.connect(function(err) {
@@ -38,22 +43,28 @@ con.query("use xnote_db", function(err){
 
 function command_parser(query : URLSearchParams, res : exp.Response, req : exp.Request){
     if(query.get("cmd") == "create_folder"){
-        try{
-            con.query("create table " + query.get("title") + " (noteID varchar(20), noteTitle tinytext, note mediumtext)");
-        }
-        catch (err){
-            console.log(err);
-            res.writeHead(500);
-            res.end();
-            reconnect_db(con);
-        }
-        finally{
+        if(req.session.folders?.find(folder => folder === query.get("title")) == undefined){
+
+            try {
+                con.query("create table " + query.get("title") + " (noteID varchar(20), noteTitle tinytext, note mediumtext)");
+            } catch (err){
+                res.writeHead(500);
+                res.end();
+                res.emit("close");
+                reconnect_db(con);
+                return;
+            }
+
             if(!res.closed){
                 write_update(req, query, res);
                 res.writeHead(200);
                 res.end();
             }
+        } else {
+            res.writeHead(500);
+            res.end();
         }
+
     } else if(query.get("cmd") == "update"){
         var data = get_session_data(req);
         res.writeHead(200);
