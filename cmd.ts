@@ -15,11 +15,11 @@ var con = mysql.createConnection({
     password: "donald1417"
 });
 
-function reconnect_db(con : any){
+function reconnect_db(){
     con = mysql.createConnection({
         host: "127.0.0.1",
         user: "root",
-        password: ""
+        password: "donald1417"
     });
 
     con.connect(function(err : any) {
@@ -39,6 +39,15 @@ con.query("use xnote_db", function(err){
     console.log("using xnote_db");
 });
 
+
+setInterval(function () {
+    try{
+        con.query('SELECT 1');
+    } catch (err){
+        reconnect_db();
+    }
+}, 5000);
+
 //TODO add note creator
 
 function command_parser(query : URLSearchParams, res : exp.Response, req : exp.Request){
@@ -57,7 +66,7 @@ function command_parser(query : URLSearchParams, res : exp.Response, req : exp.R
                 res.writeHead(500);
                 res.end();
                 res.emit("close");
-                reconnect_db(con);
+                reconnect_db();
                 return;
             }
 
@@ -71,7 +80,30 @@ function command_parser(query : URLSearchParams, res : exp.Response, req : exp.R
             res.end();
         }
 
-    } else if(query.get("cmd") == "update"){
+    } else if(query.get("cmd") == "delete_folder"){
+        if(req.session.folders?.find(folder => folder === query.get("title"))){
+            try{
+                con.query("delete * from `" + query.get("title") + "` where noteID = " + req.sessionID);
+            } catch(err){
+                console.log(err);
+                res.writeHead(500);
+                res.end();
+                res.emit("close");
+                reconnect_db();
+                return;
+            }
+
+            if(!res.closed){
+                write_update(req, query, res);
+                res.writeHead(200);
+                res.end();
+            }
+        } else {
+            res.writeHead(500);
+            res.end();
+        }
+
+    }else if(query.get("cmd") == "update"){
         var data = get_session_data(req);
         res.writeHead(200);
         res.write(JSON.stringify(data) || "");
@@ -92,6 +124,9 @@ function write_update(req: exp.Request, query: URLSearchParams, res : exp.Respon
         }
         req.session.folders.push(query.get("title") || "");
         req.session.hasUpdate = true;
+    } else if(query.get("cmd") == "delete_folder"){
+        var id = req.session.folders?.findIndex(folder => folder === query.get("title"), 0);
+        req.session.folders?.splice(id || 0, (id == undefined || id >= 0) ? 1 : 0);
     }
 }
 function get_session_data(req: exp.Request) {
@@ -101,4 +136,3 @@ function get_session_data(req: exp.Request) {
     req.session.hasUpdate = false;
     return data;
 }
-

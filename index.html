@@ -169,6 +169,7 @@
       var folder = $("#UntitledFolder").clone();
       var folder_button = $(folder).find("#addFolder").clone();
       $(folder_button).attr({"id": "delFolder"});
+      $(folder_button).attr({"onclick": "button(this)"});
       $(folder_button).children().remove();
       $(folder_button).append('<span class="iconify mdi icon mdi-24px" data-icon="mdi-folder-remove"></span');
             
@@ -219,7 +220,11 @@
         } else {
           $("#invalid-title-msg").slideDown();
         }
-      } else if()
+      } else if($(element).attr("id") == "delFolder"){
+        var folder = $(element).parent().parent().parent().parent();
+        $.get("command", {cmd: "delete_folder", title: $(folder).attr("id")});
+        $(folder).remove();
+      }
 
       $(element).toggleClass("is-loading");
       $(element).toggleClass("is-outlined");
