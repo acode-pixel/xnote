@@ -19,7 +19,7 @@ function reconnect_db(con : any){
     con = mysql.createConnection({
         host: "127.0.0.1",
         user: "root",
-        password: ""
+        password: "donald1417"
     });
 
     con.connect(function(err : any) {
@@ -48,6 +48,7 @@ function command_parser(query : URLSearchParams, res : exp.Response, req : exp.R
             try {
                 con.query("create table " + query.get("title") + " (noteID varchar(20), noteTitle tinytext, note mediumtext)");
             } catch (err){
+                console.log(err);
                 res.writeHead(500);
                 res.end();
                 res.emit("close");
