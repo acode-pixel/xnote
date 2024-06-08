@@ -76,7 +76,7 @@
               </button>
             </h1>
             <hr>
-            <button class="button is-link" id="addNote" disabled> <!--add is-outlined when active-->
+            <button class="button is-link" id="addNote" onclick="button(this)" disabled> <!--add is-outlined when active-->
               <span class="iconify mdi icon-text" data-icon="mdi-plus"></span>
               Add Note
             </button>
@@ -150,19 +150,15 @@
       }, 1000);
     }
 
-    function success_parser(){
-      $('#notif-area').append('<div class="notification is-success"><button class="delete" onclick="close_noti(this)"></button>Operation Completed   <span class="iconify mdi mdi-24px" data-icon="mdi-check-circle"></span></div>');
+    function success_parser(data){
+      var json = JSON.parse(data);
+      if(json.hasUpdate){
+        $('#notif-area').append('<div class="notification is-success"><button class="delete" onclick="close_noti(this)"></button>Operation Completed   <span class="iconify mdi mdi-24px" data-icon="mdi-check-circle"></span></div>');
+      }
     }
 
     function error_parser(){
       $('#notif-area').append('<div class="notification is-danger"><button class="delete" onclick="close_noti(this)"></button>Operation Failed   <span class="iconify mdi mdi-24px" data-icon="mdi-close-circle"></span></div>');
-    }
-
-    function update(data, status, xhr){
-      data = JSON.parse(xhr.responseText);
-      if(data.hasUpdate){
-        $('#notif-area').append('<div class="notification is-success"><button class="delete" onclick="close_noti(this)"></button>Update Completed   <span class="iconify mdi mdi-24px" data-icon="mdi-check-circle"></span></div>');
-      };
     }
 
     function add_folder_ui(folderName){
@@ -182,10 +178,9 @@
 
     function update_ui(){
       var data;
-      var xhr = $.get("command", {cmd: "update"}, update).done(
+      var xhr = $.get("command", {cmd: "update"}).done(
         function(){
         data = JSON.parse(xhr.responseText);
-        console.log(data);
         if(data.hasUpdate){
           var folderName = data.folders[data.folders.length - 1];
           add_folder_ui(folderName);
@@ -208,7 +203,8 @@
       $(element).toggleClass("is-outlined");
 
       if($(element).attr("id") == "addNote"){
-        $.get("command", {cmd: "create"});
+        var folder = $(element).parent().parent().parent();
+        $.get("command", {cmd: "create_note", folder: $(folder).attr("id")});
       } else if($(element).attr("id") == "createTitle"){
         var iname = document.getElementById("title").value;
         let regex = /[^0-9A-Z ]/i;

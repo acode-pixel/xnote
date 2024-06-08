@@ -31,6 +31,10 @@ app.get("/", (req : exp.Request, res : exp.Response) => {
 )
 });
 
+app.get("/note", (req : exp.Request, res : exp.Response) => {
+    var url = new URL(req.url ?? "", "http://" + req.headers.host);
+});
+
 app.get("/command", (req : exp.Request, res : exp.Response) => {
     var url = new URL(req.url ?? "", "http://" + req.headers.host);
     cmd.command_parser(url.searchParams, res, req);
