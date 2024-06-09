@@ -89,7 +89,7 @@
                 <button class="delete" aria-label="close" onclick="$('#change-title').toggleClass('is-active')"></button>
               </header>
               <section class="modal-card-body">
-                <input class="input" type="text" placeholder="Folder Title" id="title" maxlength="12">
+                <input class="input" type="text" placeholder="Folder Title" id="title" maxlength="12" value="">
                 <article class="message is-danger" id="invalid-title-msg">
                   <div class="message-body">
                     Avoid using any special characters or spaces in the title and try again.
@@ -182,12 +182,10 @@
         function(){
         data = JSON.parse(xhr.responseText);
         var folderName = data.folders[data.folders.length - 1];
-        if(data.hasUpdate){
-          data.folders.forEach((val, index, array) => {
+        data.folders.forEach((val, index, array) => {
             if(!document.getElementById(val))
               add_folder_ui(val);
           });
-        }
       });
     }
 
@@ -209,7 +207,7 @@
           $.get("command", {cmd: "create_folder", title: iname});
           $("#change-title").toggleClass("is-active");
           $("#invalid-title-msg").slideUp();
-          $("#title").text("");
+          document.getElementById("title").value = "";
         } else {
           $("#invalid-title-msg").slideDown();
         }

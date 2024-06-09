@@ -60,7 +60,7 @@ function command_parser(query : URLSearchParams, res : exp.Response, req : exp.R
                 return;
             }
             try {
-                con.query("create table `" + query.get("title") + "` (ownerID varchar(36), noteTitle tinytext, note mediumtext)");
+                con.query("create table `" + query.get("title") + "` (ownerSession varchar(36), noteTitle tinytext, note mediumtext, noteID int not null AUTO_INCREMENT PRIMARY KEY)");
             } catch (err){
                 console.log(err);
                 res.writeHead(500);
@@ -82,7 +82,7 @@ function command_parser(query : URLSearchParams, res : exp.Response, req : exp.R
 
     }else if(query.get("cmd") == "create_note"){
         try {
-            con.query("insert into `" + query.get("folder") + "` (ownerID) values ('" + req.sessionID + "')");
+            con.query("insert into `" + query.get("folder") + "` (ownerSession) values ('" + req.sessionID + "')");
         } catch (err){
             console.log(err);
             res.writeHead(500);
