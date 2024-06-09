@@ -82,7 +82,7 @@ function command_parser(query : URLSearchParams, res : exp.Response, req : exp.R
 
     }else if(query.get("cmd") == "create_note"){
         try {
-            con.query("insert into `" + query.get("folder") + "` (ownerID) values (" + req.sessionID + ")");
+            con.query("insert into `" + query.get("folder") + "` (ownerID) values ('" + req.sessionID + "')");
         } catch (err){
             console.log(err);
             res.writeHead(500);
@@ -93,6 +93,7 @@ function command_parser(query : URLSearchParams, res : exp.Response, req : exp.R
         }
 
         if(!res.closed){
+            //res.redirect("/note");
             res.writeHead(200);
             res.end();
         }
@@ -144,6 +145,7 @@ function write_update(req: exp.Request, query: URLSearchParams, res : exp.Respon
     } else if(query.get("cmd") == "delete_folder"){
         var id = req.session.folders?.findIndex(folder => folder === query.get("title"), 0);
         req.session.folders?.splice(id || 0, (id == undefined || id >= 0) ? 1 : 0); 
+        req.session.hasUpdate = true;
     }
 }
 function get_session_data(req: exp.Request) {

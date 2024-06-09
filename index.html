@@ -181,17 +181,14 @@
       var xhr = $.get("command", {cmd: "update"}).done(
         function(){
         data = JSON.parse(xhr.responseText);
+        var folderName = data.folders[data.folders.length - 1];
         if(data.hasUpdate){
-          var folderName = data.folders[data.folders.length - 1];
-          add_folder_ui(folderName);
-        }else {
           data.folders.forEach((val, index, array) => {
             if(!document.getElementById(val))
               add_folder_ui(val);
           });
         }
-      }
-      );
+      });
     }
 
     update_ui();
