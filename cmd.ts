@@ -101,7 +101,7 @@ function command_parser(query : URLSearchParams, res : exp.Response, req : exp.R
     }else if(query.get("cmd") == "delete_folder"){
         if(req.session.folders?.find(folder => folder === query.get("title"))){
             try{
-                con.query("delete * from `" + query.get("title") + "` where noteID = " + req.sessionID);
+                con.query("delete * from `" + query.get("title") + "` where ownerSession = " + req.sessionID);
             } catch(err){
                 console.log(err);
                 res.writeHead(500);
