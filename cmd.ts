@@ -70,7 +70,7 @@ function command_parser(query : URLSearchParams, res : exp.Response, req : exp.R
             }
 
             if(!res.closed){
-                write_update(req, query, res);
+                write_update(req, query);
                 res.writeHead(200);
                 res.end();
             }
@@ -111,7 +111,7 @@ function command_parser(query : URLSearchParams, res : exp.Response, req : exp.R
             }
 
             if(!res.closed){
-                write_update(req, query, res);
+                write_update(req, query);
                 res.writeHead(200);
                 res.end();
             }
@@ -134,7 +134,7 @@ function command_parser(query : URLSearchParams, res : exp.Response, req : exp.R
 exports.command_parser = command_parser;
 exports.con = con;
 
-function write_update(req: exp.Request, query: URLSearchParams, res : exp.Response) {
+function write_update(req: exp.Request, query: URLSearchParams) {
     if(query.get("cmd") == "create_folder"){
         if(req.session.folders == undefined){
             req.session.folders = new Array;
