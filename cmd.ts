@@ -4,7 +4,7 @@ import { SessionData } from "express-session";
 
 declare module 'express-session' {
     interface SessionData {
-      folders: Array<String>;
+      folders: Array<string>;
       hasUpdate: boolean;
     }
   }
@@ -148,7 +148,7 @@ function write_update(req: exp.Request, query: URLSearchParams) {
     }
 }
 function get_session_data(req: exp.Request) {
-    var data : SessionData = {cookie: req.session.cookie, folders : new Array<String>, hasUpdate : false};
+    var data : SessionData = {cookie: req.session.cookie, folders : new Array<string>, hasUpdate : false};
     data.folders = req.session.folders || new Array;
     data.hasUpdate = req.session.hasUpdate || false;
     req.session.hasUpdate = false;
