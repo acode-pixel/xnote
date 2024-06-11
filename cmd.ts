@@ -15,23 +15,14 @@ var con = mysql.createConnection({
     password: "donald1417"
 });
 
-function reconnect_db(){
-    con = mysql.createConnection({
-        host: "127.0.0.1",
-        user: "root",
-        password: "donald1417"
-    });
-
+function connect_db(){
     con.connect(function(err : any) {
         if(err) throw err;
         console.log("mysql DB connected");
     });
 }
 
-con.connect(function(err) {
-    if(err) throw err;
-    console.log("mysql DB connected");
-});
+connect_db();
 
 con.query("create database if not exists xnote_db");
 con.query("use xnote_db", function(err){
@@ -39,16 +30,24 @@ con.query("use xnote_db", function(err){
     console.log("using xnote_db");
 });
 
-
 setInterval(function () {
     try{
         con.query('SELECT 1');
     } catch (err){
-        reconnect_db();
+        connect_db();
     }
-}, 5000);
+}, 2000);
 
 //TODO add note creator
+
+function execute_on_mysql(cmd : string){
+    console.log(cmd);
+    try {
+        con.query(cmd);
+    } catch (err){
+        throw err;
+    }
+}
 
 function command_parser(query : URLSearchParams, res : exp.Response, req : exp.Request){
     if(query.get("cmd") == "create_folder"){
@@ -60,13 +59,13 @@ function command_parser(query : URLSearchParams, res : exp.Response, req : exp.R
                 return;
             }
             try {
-                con.query("create table `" + query.get("title") + "` (ownerSession varchar(36), noteTitle tinytext, note mediumtext, noteID int not null AUTO_INCREMENT PRIMARY KEY)");
+                execute_on_mysql("create table if not exists `" + query.get("title") + "` (ownerSession varchar(36), noteTitle tinytext, note mediumtext, noteID int not null AUTO_INCREMENT PRIMARY KEY)");
             } catch (err){
                 console.log(err);
                 res.writeHead(500);
                 res.end();
                 res.emit("close");
-                reconnect_db();
+                connect_db();
                 return;
             }
 
@@ -82,13 +81,13 @@ function command_parser(query : URLSearchParams, res : exp.Response, req : exp.R
 
     }else if(query.get("cmd") == "create_note"){
         try {
-            con.query("insert into `" + query.get("folder") + "` (ownerSession) values ('" + req.sessionID + "')");
+            execute_on_mysql("insert into `" + query.get("folder") + "` (ownerSession) values ('" + req.sessionID + "')");
         } catch (err){
             console.log(err);
             res.writeHead(500);
             res.end();
             res.emit("close");
-            reconnect_db();
+            connect_db();
             return;
         }
 
@@ -101,13 +100,13 @@ function command_parser(query : URLSearchParams, res : exp.Response, req : exp.R
     }else if(query.get("cmd") == "delete_folder"){
         if(req.session.folders?.find(folder => folder === query.get("title"))){
             try{
-                con.query("delete * from `" + query.get("title") + "` where ownerSession = " + req.sessionID);
+                execute_on_mysql("delete from `" + query.get("title") + "` where ownerSession = '" + req.sessionID + "'");
             } catch(err){
                 console.log(err);
                 res.writeHead(500);
                 res.end();
                 res.emit("close");
-                reconnect_db();
+                connect_db();
                 return;
             }
 
