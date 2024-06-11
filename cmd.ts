@@ -20,15 +20,16 @@ function connect_db(){
         if(err) throw err;
         console.log("mysql DB connected");
     });
+
+    con.query("set session wait_timeout = 31536000");
+    con.query("create database if not exists xnote_db");
+    con.query("use xnote_db", function(err){
+        if(err) throw err;
+        console.log("using xnote_db");
+    });
 }
 
 connect_db();
-
-con.query("create database if not exists xnote_db");
-con.query("use xnote_db", function(err){
-    if(err) throw err;
-    console.log("using xnote_db");
-});
 
 setInterval(function () {
     try{
