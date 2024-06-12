@@ -44,7 +44,9 @@ setInterval(function () {
 function execute_on_mysql(cmd : string){
     console.log(cmd);
     try {
-        con.query(cmd);
+        var res;
+        con.query(cmd, function(err, result){if (result){res = result}});
+        return res;
     } catch (err){
         throw err;
     }
@@ -149,8 +151,15 @@ function write_update(req: exp.Request, query: URLSearchParams) {
     }
 }
 function get_session_data(req: exp.Request) {
-    var data : SessionData = {cookie: req.session.cookie, folders : new Array<string>, hasUpdate : false};
-    data.folders = req.session.folders || new Array;
+    var note = {noteTitle: new String, noteData: new String, noteID: new String};
+    var folder = {folderTitle: new String, notes: new Array};
+    var data = {folders : new Array, hasUpdate : false};
+
+    req.session.folders?.forEach(function(val, index){
+        folder.folderTitle = val;
+        data.folders[index] = folder;
+    });
+
     data.hasUpdate = req.session.hasUpdate || false;
     req.session.hasUpdate = false;
     return data;

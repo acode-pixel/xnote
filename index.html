@@ -181,10 +181,9 @@
       var xhr = $.get("command", {cmd: "update"}).done(
         function(){
         data = JSON.parse(xhr.responseText);
-        var folderName = data.folders[data.folders.length - 1];
         data.folders.forEach((val, index, array) => {
-            if(!document.getElementById(val))
-              add_folder_ui(val);
+            if(!document.getElementById(val.folderTitle))
+              add_folder_ui(val.folderTitle);
           });
       });
     }
@@ -200,6 +199,7 @@
       if($(element).attr("id") == "addNote"){
         var folder = $(element).parent().parent().parent();
         $.get("command", {cmd: "create_note", folder: $(folder).attr("id")});
+        
       } else if($(element).attr("id") == "createTitle"){
         var iname = document.getElementById("title").value;
         let regex = /[^0-9A-Z ]/i;
