@@ -41,15 +41,15 @@ setInterval(function () {
 
 //TODO add note creator
 
-function execute_on_mysql(cmd : string){
+async function execute_on_mysql(cmd : string){
     console.log(cmd);
+    var result : any;
     try {
-        var res;
-        con.query(cmd, function(err, result){if (result){res = result}});
-        return res;
+        result = await con.promise().query(cmd);
     } catch (err){
-        throw err;
+        console.log(err);
     }
+    return result[0];
 }
 
 function command_parser(query : URLSearchParams, res : exp.Response, req : exp.Request){
@@ -95,9 +95,7 @@ function command_parser(query : URLSearchParams, res : exp.Response, req : exp.R
         }
 
         if(!res.closed){
-            //res.redirect("/note");
-            res.writeHead(200);
-            res.end();
+            res.redirect("/note");
         }
 
     }else if(query.get("cmd") == "delete_folder"){
