@@ -9,6 +9,13 @@ declare module 'express-session' {
     }
   }
 
+class notes {
+    ownerSession: string | undefined;
+    noteTitle: string | undefined;
+    noteData: string | undefined;
+    noteID: number | undefined;
+}
+
 var con = mysql.createConnection({
     host: "127.0.0.1",
     user: "root",
@@ -46,13 +53,13 @@ async function execute_on_mysql(cmd : string){
     var result : any;
     try {
         result = await con.promise().query(cmd);
+        return result[0];
     } catch (err){
         console.log(err);
     }
-    return result[0];
 }
 
-function command_parser(query : URLSearchParams, res : exp.Response, req : exp.Request){
+async function command_parser(query : URLSearchParams, res : exp.Response, req : exp.Request){
     if(query.get("cmd") == "create_folder"){
         if(req.session.folders?.find(folder => folder === query.get("title")) == undefined && query.get("title")){
             let regex = /[^0-9A-Z ]/i;
@@ -95,7 +102,8 @@ function command_parser(query : URLSearchParams, res : exp.Response, req : exp.R
         }
 
         if(!res.closed){
-            res.redirect("/note");
+            var result : Array<notes> = await execute_on_mysql("select * from `" + query.get("folder") + "` where ownerSession = '" + req.sessionID + "' order by noteID desc limit 1");
+            res.redirect("/note?table=" + query.get("folder") + "&noteID=" + result[0].noteID);
         }
 
     }else if(query.get("cmd") == "delete_folder"){
@@ -122,7 +130,7 @@ function command_parser(query : URLSearchParams, res : exp.Response, req : exp.R
         }
 
     }else if(query.get("cmd") == "update"){
-        var data = get_session_data(req);
+        var data = await get_session_data(req);
         res.writeHead(200);
         res.write(JSON.stringify(data) || "");
         res.end();
@@ -148,15 +156,24 @@ function write_update(req: exp.Request, query: URLSearchParams) {
         req.session.hasUpdate = true;
     }
 }
-function get_session_data(req: exp.Request) {
-    var note = {noteTitle: new String, noteData: new String, noteID: new String};
-    var folder = {folderTitle: new String, notes: new Array};
+async function get_session_data(req: exp.Request) {
     var data = {folders : new Array, hasUpdate : false};
 
-    req.session.folders?.forEach(function(val, index){
-        folder.folderTitle = val;
-        data.folders[index] = folder;
-    });
+    for(var i = 0; i < (req.session.folders?.length || 0); i++){
+        var note = {noteTitle: new String, noteData: new String, noteID: new String};
+        var folder = {folderTitle: new String, notes: new Array};
+        folder.folderTitle = req.session.folders?.at(i) || "";
+
+        var result: Array<notes> = await execute_on_mysql("select * from `" + folder.folderTitle + "` where ownerSession = '" + req.sessionID + "'");
+        result.forEach(function (val, index){
+            note.noteTitle = val.noteTitle || "";
+            note.noteID = val.noteID?.toString() || "";
+            note.noteData = val.noteData || "";
+
+            folder.notes[index] = note;
+        });
+        data.folders[i] = folder;
+    }
 
     data.hasUpdate = req.session.hasUpdate || false;
     req.session.hasUpdate = false;
