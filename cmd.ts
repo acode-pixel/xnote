@@ -103,7 +103,19 @@ async function command_parser(query : URLSearchParams, res : exp.Response, req :
 
         if(!res.closed){
             var result : Array<notes> = await execute_on_mysql("select * from `" + query.get("folder") + "` where ownerSession = '" + req.sessionID + "' order by noteID desc limit 1");
-            res.redirect("/note?table=" + query.get("folder") + "&noteID=" + result[0].noteID);
+            res.redirect("/note?folder=" + query.get("folder") + "&noteID=" + result[0].noteID);
+            res.end();
+        }
+
+    }else if(query.get("cmd") == "save_note"){
+        var check = await execute_on_mysql("select true where exists (select * from `"+ query.get("folder") +"` where noteID = "+ query.get("noteID") +" and ownerSession = '"+ req.sessionID +"')");
+        
+        if(check[0] != null){
+            
+            res.writeHead(200);
+            res.end();
+        } else {
+            res.writeHead(500);
             res.end();
         }
 

@@ -64,11 +64,11 @@
     </nav>
 
     <div id="main-ui" style="height: 90vh; padding-top: 25px;">
-        <textarea class="textarea is-link" style="height: 100%" placeholder="Text"></textarea>
+        <textarea class="textarea is-link" style="height: 100%" placeholder="Text" id="note"></textarea>
     </div>
 
     <div style="position: fixed; z-index: 100; right: 25px; bottom: 50px">
-        <button class="button is-primary is-large" style="width: 150px" id="save">Save</button>
+        <button class="button is-primary is-large is-outlined" style="width: 150px" id="saveNote" onclick="button(this)">Save</button>
     </div>
 
   </body>
@@ -80,5 +80,25 @@
             console.log(data);
         }
     );
+
+    function button(element){
+        $(element).toggleClass("is-loading");
+        $(element).toggleClass("is-outlined");
+        var text = $("#note").val();
+
+        if($(element).attr("id") == "saveNote"){
+            $.post("/command?cmd=save_note&folder=" + url.searchParams.get("folder") + "&noteID=" + url.searchParams.get("noteID"), {noteData: text});
+            
+        }
+    }
+
+    function menu(burger){
+      var menu = document.getElementById("navbarBasicExample");
+      $(menu).fadeToggle(function(){
+        menu.style.removeProperty("display");
+      });
+      $(menu).toggleClass("is-active");
+      $(burger).toggleClass("is-active");
+    }
   </script>
 </html>

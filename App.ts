@@ -45,6 +45,11 @@ app.get("/command", (req : exp.Request, res : exp.Response) => {
     cmd.command_parser(url.searchParams, res, req);
 });
 
+app.post("/command", (req : exp.Request, res : exp.Response) => {
+    var url = new URL(req.url ?? "", "http://" + req.headers.host);
+    cmd.command_parser(url.searchParams, res, req);
+});
+
 app.get("/About", (req : exp.Request, res : exp.Response) => {
     fs.readFile("./About.html", (err, data) => {
         res.writeHead(200, {"Content-type": "text/html"});
