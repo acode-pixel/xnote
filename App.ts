@@ -33,6 +33,11 @@ app.get("/", (req : exp.Request, res : exp.Response) => {
 
 app.get("/note", (req : exp.Request, res : exp.Response) => {
     var url = new URL(req.url ?? "", "http://" + req.headers.host);
+    fs.readFile("./note.html", (err, data) => {
+        res.writeHead(200, {"Content-type": "text/html"});
+        res.write(data);
+        res.end();
+    });
 });
 
 app.get("/command", (req : exp.Request, res : exp.Response) => {

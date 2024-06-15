@@ -104,6 +104,7 @@ async function command_parser(query : URLSearchParams, res : exp.Response, req :
         if(!res.closed){
             var result : Array<notes> = await execute_on_mysql("select * from `" + query.get("folder") + "` where ownerSession = '" + req.sessionID + "' order by noteID desc limit 1");
             res.redirect("/note?table=" + query.get("folder") + "&noteID=" + result[0].noteID);
+            res.end();
         }
 
     }else if(query.get("cmd") == "delete_folder"){

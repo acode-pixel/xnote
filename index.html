@@ -1,4 +1,3 @@
-<!--TODO remove doc folder-->
 <!DOCTYPE html>
 <html>
   <head>
@@ -198,7 +197,7 @@
 
       if($(element).attr("id") == "addNote"){
         var folder = $(element).parent().parent().parent();
-        $.get("command", {cmd: "create_note", folder: $(folder).attr("id")});
+        window.location.href = "/command?cmd=create_note&folder=" + $(folder).attr("id");
         
       } else if($(element).attr("id") == "createTitle"){
         var iname = document.getElementById("title").value;

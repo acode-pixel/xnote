@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="//code.iconify.design/1/1.0.6/iconify.min.js"></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hello Bulma!</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+
+    <nav class="navbar is-flex-mobile" role="navigation" aria-label="main navigation">
+      <div class="navbar-brand">
+        <h1 class="navbar-item">Xnote</h1>
+        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample" onclick="menu(this)">
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+      </div>
+    
+      <div id="navbarBasicExample" class="navbar-menu">
+        <div class="navbar-start">
+          <a class="navbar-item" href="/">
+            Home
+          </a>
+    
+          <a class="navbar-item" href="/About">
+            About
+          </a>
+    
+          <div class="navbar-item has-dropdown is-hoverable">
+            <a class="navbar-link">
+              More
+            </a>
+    
+            <div class="navbar-dropdown">
+              <a class="navbar-item">
+                About the dev
+              </a>
+              <a class="navbar-item">
+                Roadmap
+              </a>
+            </div>
+          </div>
+        </div>
+    
+        <div class="navbar-end">
+          <div class="navbar-item">
+            <div class="buttons">
+              <a class="button is-link">
+                <strong>Sign up</strong>
+              </a>
+              <a class="button is-light">
+                Log in
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div id="main-ui" style="height: 90vh; padding-top: 25px;">
+        <textarea class="textarea is-link" style="height: 100%" placeholder="Text"></textarea>
+    </div>
+
+    <div style="position: fixed; z-index: 100; right: 25px; bottom: 50px">
+        <button class="button is-primary is-large" style="width: 150px" id="save">Save</button>
+    </div>
+
+  </body>
+  <script>
+    var url = new URL(window.location.href);
+    var xhr = $.get("command", {cmd: "update"}).done(
+        function(){
+            var data = JSON.parse(xhr.responseText);
+            console.log(data);
+        }
+    );
+  </script>
+</html>
