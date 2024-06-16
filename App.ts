@@ -3,11 +3,13 @@ import exp from "express";
 import exps from "express-session";
 const MemoryStore = require('memorystore')(exps);
 import {v4 as uuidv4} from 'uuid';
+import bodyParser from "body-parser";
 
 var cmd = require("./cmd");
 
 var app = exp();
 
+app.use(bodyParser());
 app.use(exps(
     { name:'SessionCookie',
       genid: function(req) {

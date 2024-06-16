@@ -106,10 +106,10 @@
         </section>
       
         <!--Notes area-->
-        <section class="section">
+        <section class="section" id="Notes">
           <div class="container">
             <div class="columns">
-              <div class="column is-one-third">
+              <div class="column is-one-third is-hidden">
                 <div class="card">
                   <header class="card-header">
                     <p class="card-header-title">Component</p>
@@ -140,6 +140,7 @@
   </div>
 
   <script>
+    // add notes to ui
     $("#invalid-title-msg").slideToggle();
 
     function close_noti(element){
@@ -150,7 +151,7 @@
     }
 
     function success_parser(data){
-      var json = JSON.parse(data);
+      var json = JSON.parse(data || {hasUpdate: false});
       if(json.hasUpdate){
         $('#notif-area').append('<div class="notification is-success"><button class="delete" onclick="close_noti(this)"></button>Operation Completed   <span class="iconify mdi mdi-24px" data-icon="mdi-check-circle"></span></div>');
       }
@@ -175,16 +176,30 @@
       $("#UntitledFolder").before(folder);
     }
 
+    function add_note_ui(folder, note){
+      var container = $(folder).children("#Notes").children().children();
+      var note_ui = container.children().clone();
+      $(note_ui).toggleClass("is-hidden");
+      $(note_ui).find(".card-header-title").text(note.noteTitle);
+      $(note_ui).find(".content").text(note.noteData);
+      $(container).append(note_ui);
+    }
+
     function update_ui(){
       var data;
       var xhr = $.get("command", {cmd: "update"}).done(
         function(){
-        data = JSON.parse(xhr.responseText);
-        data.folders.forEach((val, index, array) => {
+          data = JSON.parse(xhr.responseText);
+          data.folders.forEach((val, index, array) => {
             if(!document.getElementById(val.folderTitle))
               add_folder_ui(val.folderTitle);
+              var folder = document.getElementById(val.folderTitle);
+              val.notes.forEach((val, index, array) => {
+                add_note_ui(folder, val);
+            })
           });
-      });
+        }
+      );
     }
 
     update_ui();

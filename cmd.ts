@@ -12,7 +12,7 @@ declare module 'express-session' {
 class notes {
     ownerSession: string | undefined;
     noteTitle: string | undefined;
-    noteData: string | undefined;
+    note: string | undefined;
     noteID: number | undefined;
 }
 
@@ -56,6 +56,7 @@ async function execute_on_mysql(cmd : string){
         return result[0];
     } catch (err){
         console.log(err);
+        throw "command failed";
     }
 }
 
@@ -93,7 +94,6 @@ async function command_parser(query : URLSearchParams, res : exp.Response, req :
         try {
             execute_on_mysql("insert into `" + query.get("folder") + "` (ownerSession) values ('" + req.sessionID + "')");
         } catch (err){
-            console.log(err);
             res.writeHead(500);
             res.end();
             res.emit("close");
@@ -111,9 +111,26 @@ async function command_parser(query : URLSearchParams, res : exp.Response, req :
         var check = await execute_on_mysql("select true where exists (select * from `"+ query.get("folder") +"` where noteID = "+ query.get("noteID") +" and ownerSession = '"+ req.sessionID +"')");
         
         if(check[0] != null){
-            
-            res.writeHead(200);
-            res.end();
+            try {
+                var note_data : string = req.body.noteData;
+                var title : string = note_data.length > 30 ? note_data.substring(0, 27) + "..." : note_data;
+                await execute_on_mysql("update `"+ query.get("folder") +"` set note = '"+ note_data +"' where noteID = " + query.get("noteID"));
+                await execute_on_mysql("update `"+ query.get("folder") +"` set noteTitle = '"+ title +"' where noteID = " + query.get("noteID"));
+            } catch(err) {
+                console.log(err);
+                res.writeHead(500);
+                res.end();
+                res.emit("close");
+                connect_db();
+                return;
+            }
+
+            if(!res.closed){
+                write_update(req, query);
+                res.writeHead(200);
+                res.end();
+            }
+
         } else {
             res.writeHead(500);
             res.end();
@@ -124,7 +141,6 @@ async function command_parser(query : URLSearchParams, res : exp.Response, req :
             try{
                 execute_on_mysql("delete from `" + query.get("title") + "` where ownerSession = '" + req.sessionID + "'");
             } catch(err){
-                console.log(err);
                 res.writeHead(500);
                 res.end();
                 res.emit("close");
@@ -167,21 +183,23 @@ function write_update(req: exp.Request, query: URLSearchParams) {
         var id = req.session.folders?.findIndex(folder => folder === query.get("title"), 0);
         req.session.folders?.splice(id || 0, (id == undefined || id >= 0) ? 1 : 0); 
         req.session.hasUpdate = true;
+    } else if(query.get("cmd") == "save_note"){
+        req.session.hasUpdate = true;
     }
 }
 async function get_session_data(req: exp.Request) {
     var data = {folders : new Array, hasUpdate : false};
 
     for(var i = 0; i < (req.session.folders?.length || 0); i++){
-        var note = {noteTitle: new String, noteData: new String, noteID: new String};
         var folder = {folderTitle: new String, notes: new Array};
         folder.folderTitle = req.session.folders?.at(i) || "";
 
         var result: Array<notes> = await execute_on_mysql("select * from `" + folder.folderTitle + "` where ownerSession = '" + req.sessionID + "'");
         result.forEach(function (val, index){
+            var note = {noteTitle: new String, noteData: new String, noteID: new String};
             note.noteTitle = val.noteTitle || "";
             note.noteID = val.noteID?.toString() || "";
-            note.noteData = val.noteData || "";
+            note.noteData = val.note || "";
 
             folder.notes[index] = note;
         });

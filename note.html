@@ -72,14 +72,51 @@
     </div>
 
   </body>
+  <div class="section is-flex-mobile" id="notif-area" style="font-size: 125%; flex-direction: column-reverse; margin-right: -10px; z-index: 100; position: fixed; top: 40px; right: 1px;"></div>
+
   <script>
-    var url = new URL(window.location.href);
-    var xhr = $.get("command", {cmd: "update"}).done(
+
+  var url = new URL(window.location.href);
+  var text;
+
+    function close_noti(element){
+      $(element).parent().fadeOut();
+      setTimeout(function (){
+        $(element).parent().remove();
+      }, 1000);
+    }
+
+    function success_parser(data){
+      var json = JSON.parse(data || {hasUpdate: false});
+      if(json.hasUpdate){
+        $('#notif-area').append('<div class="notification is-success"><button class="delete" onclick="close_noti(this)"></button>Operation Completed   <span class="iconify mdi mdi-24px" data-icon="mdi-check-circle"></span></div>');
+      }
+    }
+
+    function error_parser(){
+      $('#notif-area').append('<div class="notification is-danger"><button class="delete" onclick="close_noti(this)"></button>Operation Failed   <span class="iconify mdi mdi-24px" data-icon="mdi-close-circle"></span></div>');
+    }
+
+    function update_ui(){
+      var data;
+      var xhr = $.get("command", {cmd: "update"}).done(
         function(){
-            var data = JSON.parse(xhr.responseText);
-            console.log(data);
-        }
-    );
+        data = JSON.parse(xhr.responseText);
+        data.folders.forEach((val, index, array) => {
+            if(val.folderTitle == url.searchParams.get("folder")){
+              data.folders[index].notes.forEach((val, index, array) => {
+                if(val.noteID == url.searchParams.get("noteID")){
+                  $("#note").val(val.noteData);
+                }
+              });
+            }
+          });
+      });
+    }
+
+    update_ui();
+
+    $.ajaxSetup({success: success_parser, error: error_parser});
 
     function button(element){
         $(element).toggleClass("is-loading");
@@ -88,8 +125,11 @@
 
         if($(element).attr("id") == "saveNote"){
             $.post("/command?cmd=save_note&folder=" + url.searchParams.get("folder") + "&noteID=" + url.searchParams.get("noteID"), {noteData: text});
-            
         }
+
+        $(element).toggleClass("is-loading");
+        $(element).toggleClass("is-outlined");
+        setTimeout(update_ui, 200);
     }
 
     function menu(burger){
