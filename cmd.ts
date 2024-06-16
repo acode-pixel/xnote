@@ -113,7 +113,7 @@ async function command_parser(query : URLSearchParams, res : exp.Response, req :
         if(check[0] != null){
             try {
                 var note_data : string = req.body.noteData;
-                var title : string = note_data.length > 30 ? note_data.substring(0, 27) + "..." : note_data;
+                var title : string = note_data.length > 35 ? note_data.substring(0, 32) + "..." : note_data;
                 await execute_on_mysql("update `"+ query.get("folder") +"` set note = '"+ note_data +"' where noteID = " + query.get("noteID"));
                 await execute_on_mysql("update `"+ query.get("folder") +"` set noteTitle = '"+ title +"' where noteID = " + query.get("noteID"));
             } catch(err) {

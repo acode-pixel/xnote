@@ -108,13 +108,13 @@
         <!--Notes area-->
         <section class="section" id="Notes">
           <div class="container">
-            <div class="columns">
-              <div class="column is-one-third is-hidden">
+            <div class="columns is-multiline">
+              <div class="column is-hidden is-one-third">
                 <div class="card">
-                  <header class="card-header">
-                    <p class="card-header-title">Component</p>
-                  </header>
-                  <div class="card-content">
+                  <div class="card-header">
+                    <div class="card-header-title" style="overflow: clip; overflow-clip-margin: content-box; word-break: break-all;">Component</div>
+                  </div>
+                  <div class="card-content" style="word-break: break-all; max-height: 190px; overflow: clip; overflow-clip-margin: content-box; -webkit-mask-image: linear-gradient(180deg, #000 60%, transparent); mask-image: linear-gradient(180deg, #000 60%, transparent);">
                     <div class="content">
                       Test
                     </div>
@@ -178,7 +178,7 @@
 
     function add_note_ui(folder, note){
       var container = $(folder).children("#Notes").children().children();
-      var note_ui = container.children().clone();
+      var note_ui = container.children(".is-hidden").clone();
       $(note_ui).toggleClass("is-hidden");
       $(note_ui).find(".card-header-title").text(note.noteTitle);
       $(note_ui).find(".content").text(note.noteData);
@@ -195,6 +195,7 @@
               add_folder_ui(val.folderTitle);
               var folder = document.getElementById(val.folderTitle);
               val.notes.forEach((val, index, array) => {
+                console.log(index);
                 add_note_ui(folder, val);
             })
           });
