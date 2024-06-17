@@ -62,6 +62,14 @@ app.get("/About", (req: exp.Request, res: exp.Response) => {
   });
 });
 
+app.get("/Roadmap", (req: exp.Request, res: exp.Response) => {
+  fs.readFile("./roadmap.html", (err, data) => {
+    res.writeHead(200, { "Content-type": "text/html" });
+    res.write(data);
+    res.end();
+  });
+});
+
 app.get("/style.css", (req: exp.Request, res: exp.Response) => {
   fs.readFile("./style.css", (err, data) => {
     res.writeHead(200, { "Content-type": "text/css" });
