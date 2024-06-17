@@ -2,82 +2,80 @@
 <html>
   <head>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Hello Bulma!</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
-    <link rel="stylesheet" href="style.css">
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css"
+    />
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-
-    <nav class="navbar is-flex-mobile" role="navigation" aria-label="main navigation">
+    <nav
+      class="navbar is-flex-mobile"
+      role="navigation"
+      aria-label="main navigation"
+    >
       <div class="navbar-brand">
         <h1 class="navbar-item">Xnote</h1>
-        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample" onclick="menu(this)">
+        <a
+          role="button"
+          class="navbar-burger"
+          aria-label="menu"
+          aria-expanded="false"
+          data-target="navbarBasicExample"
+          onclick="menu(this)"
+        >
           <span aria-hidden="true"></span>
           <span aria-hidden="true"></span>
           <span aria-hidden="true"></span>
           <span aria-hidden="true"></span>
         </a>
       </div>
-    
+
       <div id="navbarBasicExample" class="navbar-menu">
         <div class="navbar-start">
-          <a class="navbar-item" href="/">
-            Home
-          </a>
-    
-          <a class="navbar-item is-active" href="/About">
-            About
-          </a>
-    
+          <a class="navbar-item" href="/"> Home </a>
+
+          <a class="navbar-item is-active" href="/About"> About </a>
+
           <div class="navbar-item has-dropdown is-hoverable">
-            <a class="navbar-link">
-              More
-            </a>
-    
+            <a class="navbar-link"> More </a>
+
             <div class="navbar-dropdown">
-              <a class="navbar-item">
-                About the dev
-              </a>
-              <a class="navbar-item">
-                Roadmap
-              </a>
+              <a class="navbar-item"> About the dev </a>
+              <a class="navbar-item"> Roadmap </a>
             </div>
           </div>
         </div>
-    
+
         <div class="navbar-end">
           <div class="navbar-item">
             <div class="buttons">
               <a class="button is-link">
                 <strong>Sign up</strong>
               </a>
-              <a class="button is-light">
-                Log in
-              </a>
+              <a class="button is-light"> Log in </a>
             </div>
           </div>
         </div>
       </div>
     </nav>
 
-  <section class="section">
-    <div class="container">
-      <h1 class="title">
-      Wlcome to Xnote ❤!
-      </h1>
-      <p class="subtitle">
-        <strong>A note app made with bulma.</strong>
-      </p>
-    </div>
-  </section>
-
+    <section class="section">
+      <div class="container">
+        <h1 class="title">Wlcome to Xnote ❤!</h1>
+        <p class="subtitle">
+          <strong>A note app made with bulma.</strong>
+        </p>
+      </div>
+    </section>
   </body>
   <script>
-    function menu(burger){
+    function menu(burger) {
       var menu = document.getElementById("navbarBasicExample");
-      $(menu).fadeToggle(function(){
+      $(menu).fadeToggle(function () {
         menu.style.removeProperty("display");
       });
       $(menu).toggleClass("is-active");
