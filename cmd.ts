@@ -46,8 +46,6 @@ setInterval(function () {
   }
 }, 2000);
 
-//TODO add note creator
-
 async function execute_on_mysql(cmd: string) {
   console.log(cmd);
   var result: any;
