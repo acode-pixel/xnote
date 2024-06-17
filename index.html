@@ -181,6 +181,20 @@
                   >
                     <div class="content">Test</div>
                   </div>
+                  <footer class="card-footer">
+                    <a
+                      onclick="button(this)"
+                      class="card-footer-item"
+                      id="editNote"
+                      >Edit</a
+                    >
+                    <a
+                      onclick="button(this)"
+                      class="card-footer-item"
+                      id="delNote"
+                      >Delete</a
+                    >
+                  </footer>
                 </div>
               </div>
             </div>
@@ -259,7 +273,7 @@
     function add_note_ui(folder, note) {
       var container = $(folder).children("#Notes").children().children();
       var note_ui = container.children(".is-hidden").clone();
-      $(note_ui).attr({id: note.noteID});
+      $(note_ui).attr({ id: note.noteID });
       $(note_ui).toggleClass("is-hidden");
       $(note_ui).find(".card-header-title").text(note.noteTitle);
       $(note_ui).find(".content").text(note.noteData);
@@ -275,8 +289,7 @@
             add_folder_ui(val.folderTitle);
           var folder = document.getElementById(val.folderTitle);
           val.notes.forEach((val, index, array) => {
-            if(!document.getElementById(val.noteID))
-              add_note_ui(folder, val);
+            if (!document.getElementById(val.noteID)) add_note_ui(folder, val);
           });
         });
       });
@@ -309,6 +322,24 @@
         var folder = $(element).parent().parent().parent().parent();
         $.get("command", { cmd: "delete_folder", title: $(folder).attr("id") });
         $(folder).remove();
+      } else if ($(element).attr("id") == "editNote") {
+        var note_ui = $(element).parent().parent().parent();
+        var folder_ui = $(note_ui).parent().parent().parent().parent();
+        window.location.href =
+          "/note?folder=" +
+          $(folder_ui).attr("id") +
+          "&noteID=" +
+          $(note_ui).attr("id");
+      } else if ($(element).attr("id") == "delNote") {
+        var note_ui = $(element).parent().parent().parent();
+        var folder_ui = $(note_ui).parent().parent().parent().parent();
+        $.get(
+          "/command?cmd=delete_note&folder=" +
+            $(folder_ui).attr("id") +
+            "&noteID=" +
+            $(note_ui).attr("id")
+        );
+        $(note_ui).remove();
       }
 
       $(element).toggleClass("is-loading");

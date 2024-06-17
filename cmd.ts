@@ -166,7 +166,6 @@ async function command_parser(
             query.get("noteID")
         );
       } catch (err) {
-        console.log(err);
         res.writeHead(500);
         res.end();
         res.emit("close");
@@ -210,6 +209,42 @@ async function command_parser(
       res.writeHead(500);
       res.end();
     }
+  } else if (query.get("cmd") == "delete_note") {
+    var check = await execute_on_mysql(
+      "select true where exists (select * from `" +
+        query.get("folder") +
+        "` where noteID = " +
+        query.get("noteID") +
+        " and ownerSession = '" +
+        req.sessionID +
+        "')"
+    );
+
+    if (check[0] == null) {
+      res.writeHead(500);
+      res.end();
+      return;
+    }
+
+    try {
+      await execute_on_mysql(
+        "delete from `" +
+          query.get("folder") +
+          "` where noteID=" +
+          query.get("noteID")
+      );
+    } catch (err) {
+      res.writeHead(500);
+      res.end();
+      res.emit("close");
+      connect_db();
+      return;
+    }
+
+    if (!res.closed) {
+      res.writeHead(200);
+      res.end();
+    }
   } else if (query.get("cmd") == "update") {
     var data = await get_session_data(req);
     res.writeHead(200);
@@ -242,6 +277,7 @@ function write_update(req: exp.Request, query: URLSearchParams) {
     req.session.hasUpdate = true;
   }
 }
+
 async function get_session_data(req: exp.Request) {
   var data = { folders: new Array(), hasUpdate: false };
 
