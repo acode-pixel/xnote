@@ -240,6 +240,7 @@ async function command_parser(
     }
 
     if (!res.closed) {
+      write_update(req, query);
       res.writeHead(200);
       res.end();
     }
@@ -271,7 +272,7 @@ function write_update(req: exp.Request, query: URLSearchParams) {
     );
     req.session.folders?.splice(id || 0, id == undefined || id >= 0 ? 1 : 0);
     req.session.hasUpdate = true;
-  } else if (query.get("cmd") == "save_note") {
+  } else if (query.get("cmd") == "save_note" || query.get("cmd") == "delete_note") {
     req.session.hasUpdate = true;
   }
 }
