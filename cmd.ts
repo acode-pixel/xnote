@@ -11,8 +11,8 @@ declare module 'express-session' {
 
 var con = mysql.createConnection({
     host: "127.0.0.1",
-    user: "root",
-    password: "donald1417"
+    user: "web",
+    password: "web1234"
 });
 
 function connect_db(){
