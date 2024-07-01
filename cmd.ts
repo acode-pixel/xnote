@@ -17,15 +17,9 @@ class notes {
 }
 
 var con = mysql.createConnection({
-<<<<<<< HEAD
     host: "127.0.0.1",
     user: "web",
     password: "web1234"
-=======
-  host: "127.0.0.1",
-  user: "root",
-  password: "donald1417",
->>>>>>> 80b032f1f8d5da3d80e5f8823ce8416ab0ee1e25
 });
 
 function connect_db() {
