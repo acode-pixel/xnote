@@ -1,63 +1,63 @@
-<!--TODO remove doc folder-->
 <!DOCTYPE html>
 <html>
   <head>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="//code.iconify.design/1/1.0.6/iconify.min.js"></script>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Hello Bulma!</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
-    <link rel="stylesheet" href="style.css">
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css"
+    />
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-
-    <nav class="navbar is-flex-mobile" role="navigation" aria-label="main navigation">
+    <nav
+      class="navbar is-flex-mobile"
+      role="navigation"
+      aria-label="main navigation"
+    >
       <div class="navbar-brand">
         <h1 class="navbar-item">Xnote</h1>
-        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample" onclick="menu(this)">
+        <a
+          role="button"
+          class="navbar-burger"
+          aria-label="menu"
+          aria-expanded="false"
+          data-target="navbarBasicExample"
+          onclick="menu(this)"
+        >
           <span aria-hidden="true"></span>
           <span aria-hidden="true"></span>
           <span aria-hidden="true"></span>
           <span aria-hidden="true"></span>
         </a>
       </div>
-    
+
       <div id="navbarBasicExample" class="navbar-menu">
         <div class="navbar-start">
-          <a class="navbar-item is-active" href="/">
-            Home
-          </a>
-    
-          <a class="navbar-item" href="/About">
-            About
-          </a>
-    
+          <a class="navbar-item is-active" href="/"> Home </a>
+
+          <a class="navbar-item" href="/About"> About </a>
+
           <div class="navbar-item has-dropdown is-hoverable">
-            <a class="navbar-link">
-              More
-            </a>
-    
+            <a class="navbar-link"> More </a>
+
             <div class="navbar-dropdown">
-              <a class="navbar-item">
-                About the dev
-              </a>
-              <a class="navbar-item">
-                Roadmap
-              </a>
+              <a class="navbar-item"> About the dev </a>
+              <a class="navbar-item" href="/Roadmap"> Roadmap </a>
             </div>
           </div>
         </div>
-    
+
         <div class="navbar-end">
           <div class="navbar-item">
             <div class="buttons">
               <a class="button is-link">
                 <strong>Sign up</strong>
               </a>
-              <a class="button is-light">
-                Log in
-              </a>
+              <a class="button is-light"> Log in </a>
             </div>
           </div>
         </div>
@@ -71,12 +71,25 @@
           <div class="container">
             <h1 class="title" id="folder-title">
               Untitled Folder
-              <button class="button js-modal-trigger" onclick="$('#change-title').toggleClass('is-active')" id="addFolder">
-                <span class="iconify mdi icon mdi-24px" data-icon="mdi-plus-box-multiple"></span>
+              <button
+                class="button js-modal-trigger"
+                onclick="$('#change-title').toggleClass('is-active')"
+                id="addFolder"
+              >
+                <span
+                  class="iconify mdi icon mdi-24px"
+                  data-icon="mdi-plus-box-multiple"
+                ></span>
               </button>
             </h1>
-            <hr>
-            <button class="button is-link" id="addNote" onclick="button(this)" disabled> <!--add is-outlined when active-->
+            <hr />
+            <button
+              class="button is-link"
+              id="addNote"
+              onclick="button(this)"
+              disabled
+            >
+              <!--add is-outlined when active-->
               <span class="iconify mdi icon-text" data-icon="mdi-plus"></span>
               Add Note
             </button>
@@ -86,40 +99,102 @@
             <div class="modal-card">
               <header class="modal-card-head">
                 <p class="modal-card-title">Folder title</p>
-                <button class="delete" aria-label="close" onclick="$('#change-title').toggleClass('is-active')"></button>
+                <button
+                  class="delete"
+                  aria-label="close"
+                  onclick="$('#change-title').toggleClass('is-active')"
+                ></button>
               </header>
               <section class="modal-card-body">
-                <input class="input" type="text" placeholder="Folder Title" id="title" maxlength="12" value="">
+                <input
+                  class="input"
+                  type="text"
+                  placeholder="Folder Title"
+                  id="title"
+                  maxlength="12"
+                  value=""
+                />
                 <article class="message is-danger" id="invalid-title-msg">
                   <div class="message-body">
-                    Avoid using any special characters or spaces in the title and try again.
+                    Avoid using any special characters or spaces in the title
+                    and try again.
                   </div>
                 </article>
               </section>
               <footer class="modal-card-foot">
                 <div class="buttons">
-                  <button class="button is-success is-outlined" onclick="button(this)" id="createTitle">Save changes</button>
-                  <button class="button" onclick="$('#change-title').toggleClass('is-active')">Cancel</button>
+                  <button
+                    class="button is-success is-outlined"
+                    onclick="button(this)"
+                    id="createTitle"
+                  >
+                    Save changes
+                  </button>
+                  <button
+                    class="button"
+                    onclick="$('#change-title').toggleClass('is-active')"
+                  >
+                    Cancel
+                  </button>
                 </div>
               </footer>
             </div>
           </div>
         </section>
-      
+
         <!--Notes area-->
-        <section class="section">
+        <section class="section" id="Notes">
           <div class="container">
-            <div class="columns">
-              <div class="column is-one-third">
+            <div class="columns is-multiline">
+              <div class="column is-hidden is-one-third">
                 <div class="card">
-                  <header class="card-header">
-                    <p class="card-header-title">Component</p>
-                  </header>
-                  <div class="card-content">
-                    <div class="content">
-                      Test
+                  <div class="card-header">
+                    <div
+                      class="card-header-title"
+                      style="
+                        overflow: clip;
+                        overflow-clip-margin: content-box;
+                        word-break: break-all;
+                      "
+                    >
+                      Component
                     </div>
                   </div>
+                  <div
+                    class="card-content"
+                    style="
+                      word-break: break-all;
+                      max-height: 190px;
+                      overflow: clip;
+                      overflow-clip-margin: content-box;
+                      -webkit-mask-image: linear-gradient(
+                        180deg,
+                        #000 60%,
+                        transparent
+                      );
+                      mask-image: linear-gradient(
+                        180deg,
+                        #000 60%,
+                        transparent
+                      );
+                    "
+                  >
+                    <div class="content">Test</div>
+                  </div>
+                  <footer class="card-footer">
+                    <a
+                      onclick="button(this)"
+                      class="card-footer-item"
+                      id="editNote"
+                      >Edit</a
+                    >
+                    <a
+                      onclick="button(this)"
+                      class="card-footer-item"
+                      id="delNote"
+                      >Delete</a
+                    >
+                  </footer>
                 </div>
               </div>
             </div>
@@ -128,93 +203,142 @@
       </section>
     </div>
 
-  <!--<footer class="footer">
+    <!--<footer class="footer">
     <div class="content has-text-centered">
       <p>
         <strong>Xnote</strong> by <a href="https://github.com/acode-pixel">acode-pixel</a>.
       </p>
     </div>
   </footer>!-->
-
   </body>
-  <div class="section is-flex-mobile" id="notif-area" style="font-size: 125%; flex-direction: column-reverse; margin-right: -10px; z-index: 100; position: fixed; top: 40px; right: 1px;">
-  </div>
+  <div
+    class="section is-flex-mobile"
+    id="notif-area"
+    style="
+      font-size: 125%;
+      flex-direction: column-reverse;
+      margin-right: -10px;
+      z-index: 100;
+      position: fixed;
+      top: 40px;
+      right: 1px;
+    "
+  ></div>
 
   <script>
     $("#invalid-title-msg").slideToggle();
 
-    function close_noti(element){
+    function close_noti(element) {
       $(element).parent().fadeOut();
-      setTimeout(function (){
+      setTimeout(function () {
         $(element).parent().remove();
       }, 1000);
     }
 
-    function success_parser(data){
-      var json = JSON.parse(data);
-      if(json.hasUpdate){
-        $('#notif-area').append('<div class="notification is-success"><button class="delete" onclick="close_noti(this)"></button>Operation Completed   <span class="iconify mdi mdi-24px" data-icon="mdi-check-circle"></span></div>');
+    function success_parser(data) {
+      var json = JSON.parse(data || { hasUpdate: false });
+      if (json.hasUpdate) {
+        $("#notif-area").append(
+          '<div class="notification is-success"><button class="delete" onclick="close_noti(this)"></button>Operation Completed   <span class="iconify mdi mdi-24px" data-icon="mdi-check-circle"></span></div>'
+        );
       }
     }
 
-    function error_parser(){
-      $('#notif-area').append('<div class="notification is-danger"><button class="delete" onclick="close_noti(this)"></button>Operation Failed   <span class="iconify mdi mdi-24px" data-icon="mdi-close-circle"></span></div>');
+    function error_parser() {
+      $("#notif-area").append(
+        '<div class="notification is-danger"><button class="delete" onclick="close_noti(this)"></button>Operation Failed   <span class="iconify mdi mdi-24px" data-icon="mdi-close-circle"></span></div>'
+      );
     }
 
-    function add_folder_ui(folderName){
+    function add_folder_ui(folderName) {
       var folder = $("#UntitledFolder").clone();
       var folder_button = $(folder).find("#addFolder").clone();
-      $(folder_button).attr({"id": "delFolder"});
-      $(folder_button).attr({"onclick": "button(this)"});
+      $(folder_button).attr({ id: "delFolder" });
+      $(folder_button).attr({ onclick: "button(this)" });
       $(folder_button).children().remove();
-      $(folder_button).append('<span class="iconify mdi icon mdi-24px" data-icon="mdi-folder-remove"></span');
-            
-      $(folder).attr({"id": folderName});
-      $(folder).find("#folder-title").text(folderName + " ");
+      $(folder_button).append(
+        '<span class="iconify mdi icon mdi-24px" data-icon="mdi-folder-remove"></span'
+      );
+
+      $(folder).attr({ id: folderName });
+      $(folder)
+        .find("#folder-title")
+        .text(folderName + " ");
       $(folder).find("#addNote").addClass("is-outlined").removeAttr("disabled");
       $(folder).find("#folder-title").append(folder_button);
       $("#UntitledFolder").before(folder);
     }
 
-    function update_ui(){
+    function add_note_ui(folder, note) {
+      var container = $(folder).children("#Notes").children().children();
+      var note_ui = container.children(".is-hidden").clone();
+      $(note_ui).attr({ id: note.noteID });
+      $(note_ui).toggleClass("is-hidden");
+      $(note_ui).find(".card-header-title").text(note.noteTitle);
+      $(note_ui).find(".content").text(note.noteData);
+      $(container).append(note_ui);
+    }
+
+    function update_ui() {
       var data;
-      var xhr = $.get("command", {cmd: "update"}).done(
-        function(){
+      var xhr = $.get("command", { cmd: "update" }).done(function () {
         data = JSON.parse(xhr.responseText);
         data.folders.forEach((val, index, array) => {
-            if(!document.getElementById(val.folderTitle))
-              add_folder_ui(val.folderTitle);
+          if (!document.getElementById(val.folderTitle))
+            add_folder_ui(val.folderTitle);
+          var folder = document.getElementById(val.folderTitle);
+          val.notes.forEach((val, index, array) => {
+            if (!document.getElementById(val.noteID)) add_note_ui(folder, val);
           });
+        });
       });
     }
 
     update_ui();
 
-    $.ajaxSetup({success: success_parser, error: error_parser});
+    $.ajaxSetup({ success: success_parser, error: error_parser });
 
-    function button(element){
+    function button(element) {
       $(element).toggleClass("is-loading");
       $(element).toggleClass("is-outlined");
 
-      if($(element).attr("id") == "addNote"){
+      if ($(element).attr("id") == "addNote") {
         var folder = $(element).parent().parent().parent();
-        $.get("command", {cmd: "create_note", folder: $(folder).attr("id")});
-        
-      } else if($(element).attr("id") == "createTitle"){
+        window.location.href =
+          "/command?cmd=create_note&folder=" + $(folder).attr("id");
+      } else if ($(element).attr("id") == "createTitle") {
         var iname = document.getElementById("title").value;
         let regex = /[^0-9A-Z ]/i;
-        if(!regex.test(iname)){
-          $.get("command", {cmd: "create_folder", title: iname});
+        if (!regex.test(iname)) {
+          $.get("command", { cmd: "create_folder", title: iname });
           $("#change-title").toggleClass("is-active");
           $("#invalid-title-msg").slideUp();
           document.getElementById("title").value = "";
         } else {
           $("#invalid-title-msg").slideDown();
         }
-      } else if($(element).attr("id") == "delFolder"){
+      } else if ($(element).attr("id") == "delFolder") {
         var folder = $(element).parent().parent().parent().parent();
-        $.get("command", {cmd: "delete_folder", title: $(folder).attr("id")});
+        $.get("command", { cmd: "delete_folder", title: $(folder).attr("id") });
         $(folder).remove();
+      } else if ($(element).attr("id") == "editNote") {
+        var note_ui = $(element).parent().parent().parent();
+        var folder_ui = $(note_ui).parent().parent().parent().parent();
+        window.location.href =
+          "/note?folder=" +
+          $(folder_ui).attr("id") +
+          "&noteID=" +
+          $(note_ui).attr("id");
+      } else if ($(element).attr("id") == "delNote") {
+        var note_ui = $(element).parent().parent().parent();
+        var folder_ui = $(note_ui).parent().parent().parent().parent();
+        $.get(
+          "/command?cmd=delete_note&folder=" +
+            $(folder_ui).attr("id") +
+            "&noteID=" +
+            $(note_ui).attr("id")
+        );
+        $(note_ui).remove();
       }
 
       $(element).toggleClass("is-loading");
@@ -222,9 +346,9 @@
       setTimeout(update_ui, 200);
     }
 
-    function menu(burger){
+    function menu(burger) {
       var menu = document.getElementById("navbarBasicExample");
-      $(menu).fadeToggle(function(){
+      $(menu).fadeToggle(function () {
         menu.style.removeProperty("display");
       });
       $(menu).toggleClass("is-active");

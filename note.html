@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="//code.iconify.design/1/1.0.6/iconify.min.js"></script>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Hello Bulma!</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <nav
+      class="navbar is-flex-mobile"
+      role="navigation"
+      aria-label="main navigation"
+    >
+      <div class="navbar-brand">
+        <h1 class="navbar-item">Xnote</h1>
+        <a
+          role="button"
+          class="navbar-burger"
+          aria-label="menu"
+          aria-expanded="false"
+          data-target="navbarBasicExample"
+          onclick="menu(this)"
+        >
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+      </div>
+
+      <div id="navbarBasicExample" class="navbar-menu">
+        <div class="navbar-start">
+          <a class="navbar-item" href="/"> Home </a>
+
+          <a class="navbar-item" href="/About"> About </a>
+
+          <div class="navbar-item has-dropdown is-hoverable">
+            <a class="navbar-link"> More </a>
+
+            <div class="navbar-dropdown">
+              <a class="navbar-item"> About the dev </a>
+              <a class="navbar-item" href="/Roadmap"> Roadmap </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="navbar-end">
+          <div class="navbar-item">
+            <div class="buttons">
+              <a class="button is-link">
+                <strong>Sign up</strong>
+              </a>
+              <a class="button is-light"> Log in </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div id="main-ui" style="height: 90vh; padding-top: 25px">
+      <textarea
+        class="textarea is-link"
+        style="height: 100%"
+        placeholder="Text"
+        id="note"
+      ></textarea>
+    </div>
+
+    <div style="position: fixed; z-index: 100; right: 25px; bottom: 50px">
+      <button
+        class="button is-primary is-large is-outlined"
+        style="width: 150px"
+        id="saveNote"
+        onclick="button(this)"
+      >
+        Save
+      </button>
+    </div>
+  </body>
+  <div
+    class="section is-flex-mobile"
+    id="notif-area"
+    style="
+      font-size: 125%;
+      flex-direction: column-reverse;
+      margin-right: -10px;
+      z-index: 100;
+      position: fixed;
+      top: 40px;
+      right: 1px;
+    "
+  ></div>
+
+  <script>
+    var url = new URL(window.location.href);
+    var text;
+
+    function close_noti(element) {
+      $(element).parent().fadeOut();
+      setTimeout(function () {
+        $(element).parent().remove();
+      }, 1000);
+    }
+
+    function success_parser(data) {
+      var json = JSON.parse(data || { hasUpdate: false });
+      if (json.hasUpdate) {
+        $("#notif-area").append(
+          '<div class="notification is-success"><button class="delete" onclick="close_noti(this)"></button>Operation Completed   <span class="iconify mdi mdi-24px" data-icon="mdi-check-circle"></span></div>'
+        );
+      }
+    }
+
+    function error_parser() {
+      $("#notif-area").append(
+        '<div class="notification is-danger"><button class="delete" onclick="close_noti(this)"></button>Operation Failed   <span class="iconify mdi mdi-24px" data-icon="mdi-close-circle"></span></div>'
+      );
+    }
+
+    function update_ui() {
+      var data;
+      var xhr = $.get("command", { cmd: "update" }).done(function () {
+        data = JSON.parse(xhr.responseText);
+        data.folders.forEach((val, index, array) => {
+          if (val.folderTitle == url.searchParams.get("folder")) {
+            data.folders[index].notes.forEach((val, index, array) => {
+              if (val.noteID == url.searchParams.get("noteID")) {
+                $("#note").val(val.noteData);
+              }
+            });
+          }
+        });
+      });
+    }
+
+    update_ui();
+
+    $.ajaxSetup({ success: success_parser, error: error_parser });
+
+    function button(element) {
+      $(element).toggleClass("is-loading");
+      $(element).toggleClass("is-outlined");
+      var text = $("#note").val();
+
+      if ($(element).attr("id") == "saveNote") {
+        $.post(
+          "/command?cmd=save_note&folder=" +
+            url.searchParams.get("folder") +
+            "&noteID=" +
+            url.searchParams.get("noteID"),
+          { noteData: text }
+        );
+      }
+
+      $(element).toggleClass("is-loading");
+      $(element).toggleClass("is-outlined");
+      setTimeout(update_ui, 200);
+    }
+
+    function menu(burger) {
+      var menu = document.getElementById("navbarBasicExample");
+      $(menu).fadeToggle(function () {
+        menu.style.removeProperty("display");
+      });
+      $(menu).toggleClass("is-active");
+      $(burger).toggleClass("is-active");
+    }
+  </script>
+</html>
