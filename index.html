@@ -54,10 +54,53 @@
         <div class="navbar-end">
           <div class="navbar-item">
             <div class="buttons">
-              <a class="button is-link">
+              <a class="button is-link" onclick="$('#sign-Up').toggleClass('is-active')">
                 <strong>Sign up</strong>
               </a>
-              <a class="button is-light"> Log in </a>
+              <div class="modal" id="sign-Up">
+                <div class="modal-background"></div>
+                <div class="modal-card">
+                  <header class="modal-card-head">
+                    <h1 class="modal-card-title">Sign Up</h1>
+                    <button
+                      class="delete"
+                      aria-label="close"
+                      onclick="$('#sign-Up').toggleClass('is-active')"
+                    ></button>
+                  </header>
+                  <section class="modal-card-body">
+                    <div class="content">
+                      <h2>Sign Up</h2>
+                      <input
+                      class="input"
+                      type="text"
+                      placeholder="Username"
+                      id="title"
+                      maxlength="12"
+                      value=""
+                    />
+                    </div>
+                    <article class="message is-danger" id="invalid-title-msg">
+                      <div class="message-body">
+                        Avoid using any special characters or spaces in the title
+                        and try again.
+                      </div>
+                    </article>
+                  </section>
+                  <footer class="modal-card-foot">
+                    <div class="buttons">
+                      <button
+                        class="button is-success is-outlined"
+                        onclick="button(this)"
+                        id="createTitle"
+                      >
+                        Save changes
+                      </button>
+                    </div>
+                  </footer>
+                </div>
+              </div>
+              <a class="button is-light" onclick="button(this)"> Log in </a>
             </div>
           </div>
         </div>
