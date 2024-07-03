@@ -54,14 +54,17 @@
         <div class="navbar-end">
           <div class="navbar-item">
             <div class="buttons">
-              <a class="button is-link" onclick="$('#sign-Up').toggleClass('is-active')">
+              <a
+                class="button is-link"
+                onclick="$('#sign-Up').toggleClass('is-active')"
+              >
                 <strong>Sign up</strong>
               </a>
               <div class="modal" id="sign-Up">
                 <div class="modal-background"></div>
                 <div class="modal-card">
                   <header class="modal-card-head">
-                    <h1 class="modal-card-title">Sign Up</h1>
+                    <h3 class="modal-card-title">Sign Up</h3>
                     <button
                       class="delete"
                       aria-label="close"
@@ -70,20 +73,29 @@
                   </header>
                   <section class="modal-card-body">
                     <div class="content">
-                      <h2>Sign Up</h2>
+                      <h3>Username</h3>
                       <input
-                      class="input"
-                      type="text"
-                      placeholder="Username"
-                      id="title"
-                      maxlength="12"
-                      value=""
-                    />
+                        class="input"
+                        type="text"
+                        placeholder="Username"
+                        id="username"
+                        maxlength="12"
+                        value=""
+                      />
+                      <h3>Password</h3>
+                      <input
+                        class="input"
+                        type="text"
+                        placeholder="Password"
+                        id="password"
+                        maxlength="12"
+                        value=""
+                      />
                     </div>
-                    <article class="message is-danger" id="invalid-title-msg">
+                    <article class="message is-danger" id="invalid-userpass">
                       <div class="message-body">
-                        Avoid using any special characters or spaces in the title
-                        and try again.
+                        Avoid using any special characters or spaces in the
+                        username and password and try again.
                       </div>
                     </article>
                   </section>
@@ -92,7 +104,7 @@
                       <button
                         class="button is-success is-outlined"
                         onclick="button(this)"
-                        id="createTitle"
+                        id="signUp"
                       >
                         Save changes
                       </button>
@@ -116,7 +128,7 @@
               Untitled Folder
               <button
                 class="button js-modal-trigger"
-                onclick="$('#change-title').toggleClass('is-active')"
+                onclick="$('#set-title').toggleClass('is-active')"
                 id="addFolder"
               >
                 <span
@@ -137,7 +149,7 @@
               Add Note
             </button>
           </div>
-          <div class="modal" id="change-title">
+          <div class="modal" id="set-title">
             <div class="modal-background"></div>
             <div class="modal-card">
               <header class="modal-card-head">
@@ -145,7 +157,7 @@
                 <button
                   class="delete"
                   aria-label="close"
-                  onclick="$('#change-title').toggleClass('is-active')"
+                  onclick="$('#set-title').toggleClass('is-active')"
                 ></button>
               </header>
               <section class="modal-card-body">
@@ -175,7 +187,7 @@
                   </button>
                   <button
                     class="button"
-                    onclick="$('#change-title').toggleClass('is-active')"
+                    onclick="$('#set-title').toggleClass('is-active')"
                   >
                     Cancel
                   </button>
@@ -270,6 +282,7 @@
 
   <script>
     $("#invalid-title-msg").slideToggle();
+    $("#invalid-userpass").slideToggle();
 
     function close_noti(element) {
       $(element).parent().fadeOut();
@@ -295,12 +308,12 @@
 
     function add_folder_ui(folderName) {
       var folder = $("#UntitledFolder").clone();
-      var folder_button = $(folder).find("#addFolder").clone();
-      $(folder_button).attr({ id: "delFolder" });
-      $(folder_button).attr({ onclick: "button(this)" });
-      $(folder_button).children().remove();
-      $(folder_button).append(
-        '<span class="iconify mdi icon mdi-24px" data-icon="mdi-folder-remove"></span'
+      var rem_folder_button = $(folder).find("#addFolder").clone();
+      $(rem_folder_button).attr({ id: "delFolder" });
+      $(rem_folder_button).attr({ onclick: "button(this)" });
+      $(rem_folder_button).children().remove();
+      $(rem_folder_button).append(
+        '<span class="iconify mdi icon mdi-24px" data-icon="mdi-folder-remove"></span>'
       );
 
       $(folder).attr({ id: folderName });
@@ -308,7 +321,7 @@
         .find("#folder-title")
         .text(folderName + " ");
       $(folder).find("#addNote").addClass("is-outlined").removeAttr("disabled");
-      $(folder).find("#folder-title").append(folder_button);
+      $(folder).find("#folder-title").append(rem_folder_button);
       $("#UntitledFolder").before(folder);
     }
 
@@ -354,7 +367,7 @@
         let regex = /[^0-9A-Z ]/i;
         if (!regex.test(iname)) {
           $.get("command", { cmd: "create_folder", title: iname });
-          $("#change-title").toggleClass("is-active");
+          $("#set-title").toggleClass("is-active");
           $("#invalid-title-msg").slideUp();
           document.getElementById("title").value = "";
         } else {
@@ -382,6 +395,20 @@
             $(note_ui).attr("id")
         );
         $(note_ui).remove();
+      } else if ($(element).attr("id") == "signUp") {
+        var username = document.getElementById("username").value;
+        var password = document.getElementById("password").value;
+        let regex = /[^0-9A-Z ]/i;
+
+        if (!regex.test(username) && !regex.test(password)) {
+          $.get(
+            "/command?cmd=sign_in&username=" + username + "&pass=" + password
+          );
+          $("#sign-Up").toggleClass("is-active");
+          $("#invalid-userpass").slideUp();
+        } else {
+          $("#invalid-userpass").slideDown();
+        }
       }
 
       $(element).toggleClass("is-loading");
