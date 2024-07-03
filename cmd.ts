@@ -244,6 +244,21 @@ async function command_parser(
       res.writeHead(200);
       res.end();
     }
+  } else if (query.get("cmd") == "sign_in") {
+    let regex = /[^0-9A-Z ]/i;
+    if(regex.test(query.get("username") || "") || regex.test(query.get("pass") || "")){
+      res.writeHead(500);
+      res.end();
+      return
+    }
+
+    let username = query.get("username");
+    let pass = query.get("pass");
+
+    console.log(username, pass);
+    res.writeHead(200);
+    res.end();
+
   } else if (query.get("cmd") == "update") {
     var data = await get_session_data(req);
     res.writeHead(200);
