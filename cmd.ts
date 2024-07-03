@@ -34,6 +34,7 @@ function connect_db() {
     if (err) throw err;
     console.log("using xnote_db");
   });
+  con.query("create table if not exists registered_users(username tinytext, password tinytext)");
 }
 
 connect_db();
@@ -254,6 +255,10 @@ async function command_parser(
 
     let username = query.get("username");
     let pass = query.get("pass");
+
+    //execute_on_mysql();
+    // rework user records to log registered users
+    // update session ids in records when loging in as a user. god help
 
     console.log(username, pass);
     res.writeHead(200);
