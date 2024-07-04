@@ -24,7 +24,7 @@
           class="navbar-burger"
           aria-label="menu"
           aria-expanded="false"
-          data-target="navbarBasicExample"
+          data-target="navbar"
           onclick="menu(this)"
         >
           <span aria-hidden="true"></span>
@@ -32,9 +32,10 @@
           <span aria-hidden="true"></span>
           <span aria-hidden="true"></span>
         </a>
+        <h1 class="navbar-item" id="username-text"></h1>
       </div>
 
-      <div id="navbarBasicExample" class="navbar-menu">
+      <div id="navbar" class="navbar-menu">
         <div class="navbar-start">
           <a class="navbar-item" href="/"> Home </a>
 
@@ -53,10 +54,70 @@
         <div class="navbar-end">
           <div class="navbar-item">
             <div class="buttons">
-              <a class="button is-link">
+              <a
+                class="button is-link"
+                onclick="$('#sign-Up').toggleClass('is-active')"
+              >
                 <strong>Sign up</strong>
               </a>
-              <a class="button is-light"> Log in </a>
+              <div class="modal" id="sign-Up">
+                <div class="modal-background"></div>
+                <div class="modal-card">
+                  <header class="modal-card-head">
+                    <h3 class="modal-card-title">Sign Up</h3>
+                    <button
+                      class="delete"
+                      aria-label="close"
+                      onclick="$('#sign-Up').toggleClass('is-active')"
+                    ></button>
+                  </header>
+                  <section class="modal-card-body">
+                    <div class="content">
+                      <h3>Username</h3>
+                      <input
+                        class="input"
+                        type="text"
+                        placeholder="Username"
+                        id="username"
+                        maxlength="12"
+                        value=""
+                      />
+                      <h3>Password</h3>
+                      <input
+                        class="input"
+                        type="text"
+                        placeholder="Password"
+                        id="password"
+                        maxlength="12"
+                        value=""
+                      />
+                    </div>
+                    <article class="message is-danger" id="invalid-userpass">
+                      <div class="message-body">
+                        Avoid using any special characters or spaces in the
+                        username and password and try again.
+                      </div>
+                    </article>
+                    <article class="message is-danger" id="user-already-exists">
+                      <div class="message-body">
+                        User already exists. Try changing the username.
+                      </div>
+                    </article>
+                  </section>
+                  <footer class="modal-card-foot">
+                    <div class="buttons">
+                      <button
+                        class="button is-success is-outlined"
+                        onclick="button(this)"
+                        id="signUp"
+                      >
+                        Save changes
+                      </button>
+                    </div>
+                  </footer>
+                </div>
+              </div>
+              <a class="button is-light" onclick="button(this)"> Log in </a>
             </div>
           </div>
         </div>
@@ -66,15 +127,134 @@
     <section class="section">
       <div class="container">
         <h1 class="title">Roadmap</h1>
-        <div class="content">
-            Basic functions: 6/17/24
-        </div>
+        <div class="content">Basic functions: 6/17/24</div>
       </div>
     </section>
   </body>
   <script>
+    $("#invalid-userpass").slideToggle();
+    $("#user-already-exists").slideToggle();
+
+    function close_noti(element) {
+      $(element).parent().fadeOut();
+      setTimeout(function () {
+        $(element).parent().remove();
+      }, 1000);
+    }
+
+    function success_parser(data) {
+      try {
+        var json = JSON.parse(data || { hasUpdate: false });
+      } catch (err){
+        return 
+      }
+      if (json.hasUpdate) {
+        $("#notif-area").append(
+          '<div class="notification is-success"><button class="delete" onclick="close_noti(this)"></button>Operation Completed   <span class="iconify mdi mdi-24px" data-icon="mdi-check-circle"></span></div>'
+        );
+      }
+    }
+
+    function error_parser() {
+      $("#notif-area").append(
+        '<div class="notification is-danger"><button class="delete" onclick="close_noti(this)"></button>Operation Failed   <span class="iconify mdi mdi-24px" data-icon="mdi-close-circle"></span></div>'
+      );
+    }
+
+    function update_ui() {
+      var data;
+      var xhr = $.get("command", { cmd: "update" }).done(function () {
+        data = JSON.parse(xhr.responseText);
+        data.folders.forEach((val, index, array) => {
+          if (!document.getElementById(val.folderTitle))
+            add_folder_ui(val.folderTitle);
+          var folder = document.getElementById(val.folderTitle);
+          val.notes.forEach((val, index, array) => {
+            if (!document.getElementById(val.noteID)) add_note_ui(folder, val);
+          });
+        });
+
+        $("#username-text").text(data.username);
+        if (data.username != "Guest"){
+          // show log out btn
+        }
+      });
+    }
+
+    update_ui();
+
+    $.ajaxSetup({ success: success_parser, error: error_parser });
+
+    function button(element) {
+      $(element).toggleClass("is-loading");
+      $(element).toggleClass("is-outlined");
+
+      if ($(element).attr("id") == "addNote") {
+        var folder = $(element).parent().parent().parent();
+        window.location.href =
+          "/command?cmd=create_note&folder=" + $(folder).attr("id");
+      } else if ($(element).attr("id") == "createTitle") {
+        var iname = document.getElementById("title").value;
+        let regex = /[^0-9A-Z ]/i;
+        if (!regex.test(iname)) {
+          $.get("command", { cmd: "create_folder", title: iname });
+          $("#set-title").toggleClass("is-active");
+          $("#invalid-title-msg").slideUp();
+          document.getElementById("title").value = "";
+        } else {
+          $("#invalid-title-msg").slideDown();
+        }
+      } else if ($(element).attr("id") == "delFolder") {
+        var folder = $(element).parent().parent().parent().parent();
+        $.get("command", { cmd: "delete_folder", title: $(folder).attr("id") });
+        $(folder).remove();
+      } else if ($(element).attr("id") == "editNote") {
+        var note_ui = $(element).parent().parent().parent();
+        var folder_ui = $(note_ui).parent().parent().parent().parent();
+        window.location.href =
+          "/note?folder=" +
+          $(folder_ui).attr("id") +
+          "&noteID=" +
+          $(note_ui).attr("id");
+      } else if ($(element).attr("id") == "delNote") {
+        var note_ui = $(element).parent().parent().parent();
+        var folder_ui = $(note_ui).parent().parent().parent().parent();
+        $.get(
+          "/command?cmd=delete_note&folder=" +
+            $(folder_ui).attr("id") +
+            "&noteID=" +
+            $(note_ui).attr("id")
+        );
+        $(note_ui).remove();
+      } else if ($(element).attr("id") == "signUp") {
+        var username = document.getElementById("username").value;
+        var password = document.getElementById("password").value;
+        let regex = /[^0-9A-Z ]/i;
+
+        if (!regex.test(username) && !regex.test(password)) {
+          var xhr = $.get(
+            "/command?cmd=sign_in&username=" + username + "&pass=" + password
+          ).done(function () {
+            if (xhr.responseText == "error: user already exists"){
+              $("#user-already-exists").slideDown();
+            } else {
+              $("#sign-Up").toggleClass("is-active");
+              $("#invalid-userpass").slideUp();
+              $("#user-already-exists").slideUp();
+            }
+          });
+        } else {
+          $("#invalid-userpass").slideDown();
+        }
+      }
+
+      $(element).toggleClass("is-loading");
+      $(element).toggleClass("is-outlined");
+      setTimeout(update_ui, 200);
+    }
+
     function menu(burger) {
-      var menu = document.getElementById("navbarBasicExample");
+      var menu = document.getElementById("navbar");
       $(menu).fadeToggle(function () {
         menu.style.removeProperty("display");
       });

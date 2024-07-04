@@ -99,6 +99,11 @@
                         username and password and try again.
                       </div>
                     </article>
+                    <article class="message is-danger" id="user-already-exists">
+                      <div class="message-body">
+                        User already exists. Try changing the username.
+                      </div>
+                    </article>
                   </section>
                   <footer class="modal-card-foot">
                     <div class="buttons">
@@ -119,6 +124,8 @@
         </div>
       </div>
     </nav>
+
+    <!--clear main ui when updating ui-->
 
     <div id="main-ui">
       <section class="section" id="UntitledFolder">
@@ -284,6 +291,7 @@
   <script>
     $("#invalid-title-msg").slideToggle();
     $("#invalid-userpass").slideToggle();
+    $("#user-already-exists").slideToggle();
 
     function close_noti(element) {
       $(element).parent().fadeOut();
@@ -414,11 +422,12 @@
           var xhr = $.get(
             "/command?cmd=sign_in&username=" + username + "&pass=" + password
           ).done(function () {
-            if (xhr.status == 500 && xhr.responseText == "error: user already exists"){
-              console.log("user already exists");
+            if (xhr.responseText == "error: user already exists"){
+              $("#user-already-exists").slideDown();
             } else {
               $("#sign-Up").toggleClass("is-active");
               $("#invalid-userpass").slideUp();
+              $("#user-already-exists").slideUp();
             }
           });
         } else {

@@ -265,7 +265,7 @@ async function command_parser(
     );
 
     if (check[0] != null){
-      res.writeHead(500);
+      res.writeHead(200);
       res.write("error: user already exists");
       res.end();
       return;
@@ -287,7 +287,7 @@ async function command_parser(
         await execute_on_mysql("delete from `" + folder + "` where ownerSession = '"+ req.sessionID +"'");
       }
       write_update(req, query);
-      req.session.folders?.fill("");
+      req.session.folders = [];
       res.writeHead(200);
       res.end();
     }
