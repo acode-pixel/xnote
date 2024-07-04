@@ -25,7 +25,7 @@
           class="navbar-burger"
           aria-label="menu"
           aria-expanded="false"
-          data-target="navbarBasicExample"
+          data-target="navbar"
           onclick="menu(this)"
         >
           <span aria-hidden="true"></span>
@@ -33,9 +33,10 @@
           <span aria-hidden="true"></span>
           <span aria-hidden="true"></span>
         </a>
+        <h1 class="navbar-item" id="username-text"></h1>
       </div>
 
-      <div id="navbarBasicExample" class="navbar-menu">
+      <div id="navbar" class="navbar-menu">
         <div class="navbar-start">
           <a class="navbar-item is-active" href="/"> Home </a>
 
@@ -292,7 +293,11 @@
     }
 
     function success_parser(data) {
-      var json = JSON.parse(data || { hasUpdate: false });
+      try {
+        var json = JSON.parse(data || { hasUpdate: false });
+      } catch (err){
+        return 
+      }
       if (json.hasUpdate) {
         $("#notif-area").append(
           '<div class="notification is-success"><button class="delete" onclick="close_noti(this)"></button>Operation Completed   <span class="iconify mdi mdi-24px" data-icon="mdi-check-circle"></span></div>'
@@ -347,6 +352,11 @@
             if (!document.getElementById(val.noteID)) add_note_ui(folder, val);
           });
         });
+
+        $("#username-text").text(data.username);
+        if (data.username != "Guest"){
+          // show log out btn
+        }
       });
     }
 
@@ -401,11 +411,16 @@
         let regex = /[^0-9A-Z ]/i;
 
         if (!regex.test(username) && !regex.test(password)) {
-          $.get(
+          var xhr = $.get(
             "/command?cmd=sign_in&username=" + username + "&pass=" + password
-          );
-          $("#sign-Up").toggleClass("is-active");
-          $("#invalid-userpass").slideUp();
+          ).done(function () {
+            if (xhr.status == 500 && xhr.responseText == "error: user already exists"){
+              console.log("user already exists");
+            } else {
+              $("#sign-Up").toggleClass("is-active");
+              $("#invalid-userpass").slideUp();
+            }
+          });
         } else {
           $("#invalid-userpass").slideDown();
         }
@@ -417,7 +432,7 @@
     }
 
     function menu(burger) {
-      var menu = document.getElementById("navbarBasicExample");
+      var menu = document.getElementById("navbar");
       $(menu).fadeToggle(function () {
         menu.style.removeProperty("display");
       });

@@ -4,6 +4,7 @@ import { SessionData } from "express-session";
 
 declare module "express-session" {
   interface SessionData {
+    username: string;
     folders: Array<string>;
     hasUpdate: boolean;
   }
@@ -285,6 +286,7 @@ async function command_parser(
         var folder = req.session.folders?.at(i) || "";
         await execute_on_mysql("delete from `" + folder + "` where ownerSession = '"+ req.sessionID +"'");
       }
+      write_update(req, query);
       req.session.folders?.fill("");
       res.writeHead(200);
       res.end();
@@ -323,11 +325,14 @@ function write_update(req: exp.Request, query: URLSearchParams) {
     req.session.hasUpdate = true;
   } else if (query.get("cmd") == "save_note" || query.get("cmd") == "delete_note") {
     req.session.hasUpdate = true;
+  } else if (query.get("cmd") == "sign_in"){
+    req.session.username = query.get("username") || "";
   }
 }
 
 async function get_session_data(req: exp.Request) {
-  var data = { folders: new Array(), hasUpdate: false };
+  var data = { username: "", folders: new Array(), hasUpdate: false };
+  data.username = (req.session.username) ? req.session.username : "Guest";
 
   for (var i = 0; i < (req.session.folders?.length || 0); i++) {
     var folder = { folderTitle: new String(), notes: new Array() };
