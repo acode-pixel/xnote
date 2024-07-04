@@ -34,7 +34,7 @@ function connect_db() {
     if (err) throw err;
     console.log("using xnote_db");
   });
-  con.query("create table if not exists registered_users(username tinytext, password tinytext)");
+  con.query("create table if not exists registered_users(ownerSession varchar(36), username tinytext, password tinytext, folders longtext)");
 }
 
 connect_db();
@@ -80,7 +80,7 @@ async function command_parser(
         execute_on_mysql(
           "create table if not exists `" +
             query.get("title") +
-            "` (ownerSession varchar(36), noteTitle tinytext, note mediumtext, noteID int not null AUTO_INCREMENT PRIMARY KEY)"
+            "` (ownerSession varchar(36), ownerName tinytext, noteTitle tinytext, note mediumtext, noteID int not null AUTO_INCREMENT PRIMARY KEY)"
         );
       } catch (err) {
         console.log(err);
@@ -256,13 +256,41 @@ async function command_parser(
     let username = query.get("username");
     let pass = query.get("pass");
 
-    //execute_on_mysql();
-    // rework user records to log registered users
-    // update session ids in records when loging in as a user. god help
+    var check = await execute_on_mysql(
+      "select true where exists (select * from `registered_users`" +
+        " where username = '" +
+        username +
+        "')"
+    );
 
-    console.log(username, pass);
-    res.writeHead(200);
-    res.end();
+    if (check[0] != null){
+      res.writeHead(500);
+      res.write("error: user already exists");
+      res.end();
+      return;
+    }
+
+    try {
+      await execute_on_mysql("insert into `registered_users` (username, password, ownerSession) values ('"+ username + "', '"+ pass +"', '" + req.sessionID +"')");
+    } catch (err) {
+      res.writeHead(500);
+      res.end();
+      res.emit("close");
+      connect_db();
+      return;
+    }
+
+    if (!res.closed){
+      for (var i = 0; i < (req.session.folders?.length || 0); i++){
+        var folder = req.session.folders?.at(i) || "";
+        await execute_on_mysql("delete from `" + folder + "` where ownerSession = '"+ req.sessionID +"'");
+      }
+      req.session.folders?.fill("");
+      res.writeHead(200);
+      res.end();
+    }
+    // update session ids in records when loging in as a user.
+
 
   } else if (query.get("cmd") == "update") {
     var data = await get_session_data(req);
@@ -284,6 +312,7 @@ function write_update(req: exp.Request, query: URLSearchParams) {
       req.session.folders = new Array();
     }
     req.session.folders.push(query.get("title") || "");
+
     req.session.hasUpdate = true;
   } else if (query.get("cmd") == "delete_folder") {
     var id = req.session.folders?.findIndex(
