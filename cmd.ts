@@ -325,6 +325,7 @@ function write_update(req: exp.Request, query: URLSearchParams) {
     req.session.hasUpdate = true;
   } else if (query.get("cmd") == "save_note" || query.get("cmd") == "delete_note") {
     req.session.hasUpdate = true;
+    console.log(req.session.hasUpdate);
   } else if (query.get("cmd") == "sign_in"){
     req.session.username = query.get("username") || "";
   }
