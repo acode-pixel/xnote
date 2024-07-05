@@ -352,18 +352,26 @@
       var data;
       var xhr = $.get("command", { cmd: "update" }).done(function () {
         data = JSON.parse(xhr.responseText);
+        folders = [];
         data.folders.forEach((val, index, array) => {
           if (!document.getElementById(val.folderTitle))
             add_folder_ui(val.folderTitle);
           var folder = document.getElementById(val.folderTitle);
+          folders.push(val.folderTitle);
           val.notes.forEach((val, index, array) => {
             if (!document.getElementById(val.noteID)) add_note_ui(folder, val);
           });
         });
 
+        $("#main-ui").children().filter(function() {
+          if (!folders.includes($(this).attr("id")) && $(this).attr("id") != "UntitledFolder"){
+            return $(this);
+          }
+        }).remove();
+
         $("#username-text").text(data.username);
         if (data.username != "Guest"){
-          // show log out btn
+          
         }
       });
     }
