@@ -56,6 +56,7 @@
           <div class="navbar-item">
             <div class="buttons">
               <a
+                id="signUp-btn"
                 class="button is-link"
                 onclick="$('#sign-Up').toggleClass('is-active')"
               >
@@ -93,7 +94,7 @@
                         value=""
                       />
                     </div>
-                    <article class="message is-danger" id="invalid-userpass">
+                    <article class="message is-danger" id="char-warning">
                       <div class="message-body">
                         Avoid using any special characters or spaces in the
                         username and password and try again.
@@ -112,13 +113,70 @@
                         onclick="button(this)"
                         id="signUp"
                       >
-                        Save changes
+                        Sign Up
                       </button>
                     </div>
                   </footer>
                 </div>
               </div>
-              <a class="button is-light" onclick="button(this)"> Log in </a>
+              <a class="button is-light" id="logIn-btn" onclick="$('#log-In').toggleClass('is-active')"> Log in </a>
+              <div class="modal" id="log-In">
+                <div class="modal-background"></div>
+                <div class="modal-card">
+                  <header class="modal-card-head">
+                    <h3 class="modal-card-title">Log In</h3>
+                    <button
+                      class="delete"
+                      aria-label="close"
+                      onclick="$('#log-In').toggleClass('is-active')"
+                    ></button>
+                  </header>
+                  <section class="modal-card-body">
+                    <div class="content">
+                      <h3>Username</h3>
+                      <input
+                        class="input"
+                        type="text"
+                        placeholder="Username"
+                        id="username"
+                        maxlength="12"
+                        value=""
+                      />
+                      <h3>Password</h3>
+                      <input
+                        class="input"
+                        type="text"
+                        placeholder="Password"
+                        id="password"
+                        maxlength="12"
+                        value=""
+                      />
+                    </div>
+                    <article class="message is-danger" id="invalid-userpass">
+                      <div class="message-body">
+                        Invalid username or password.
+                      </div>
+                    </article>
+                    <article class="message is-danger" id="char-warning">
+                      <div class="message-body">
+                        Avoid using any special characters or spaces in the
+                        username and password and try again.
+                      </div>
+                    </article>
+                  </section>
+                  <footer class="modal-card-foot">
+                    <div class="buttons">
+                      <button
+                        class="button is-success is-outlined"
+                        onclick="button(this)"
+                        id="logIn"
+                      >
+                        Log In
+                      </button>
+                    </div>
+                  </footer>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -290,8 +348,8 @@
 
   <script>
     $("#invalid-title-msg").slideToggle();
-    $("#invalid-userpass").slideToggle();
-    $("#user-already-exists").slideToggle();
+    $("#sign-Up").find(".message").slideToggle();
+    $("#log-In").find(".message").slideToggle();
 
     function close_noti(element) {
       $(element).parent().fadeOut();
@@ -371,7 +429,9 @@
 
         $("#username-text").text(data.username);
         if (data.username != "Guest"){
-          
+          $("#signUp-btn").hide();
+          $("#logIn-btn").text("Log Out");
+          $("#logIn-btn").attr("id", "logOut-btn");
         }
       });
     }
@@ -422,8 +482,8 @@
         );
         $(note_ui).remove();
       } else if ($(element).attr("id") == "signUp") {
-        var username = document.getElementById("username").value;
-        var password = document.getElementById("password").value;
+        var username = $("#sign-Up").find("#username").val();
+        var password = $("#sign-Up").find("#password").val();
         let regex = /[^0-9A-Z ]/i;
 
         if (!regex.test(username) && !regex.test(password)) {
@@ -431,16 +491,32 @@
             "/command?cmd=sign_in&username=" + username + "&pass=" + password
           ).done(function () {
             if (xhr.responseText == "error: user already exists"){
-              $("#user-already-exists").slideDown();
+              $("#sign-Up").find("#user-already-exists").slideDown();
             } else {
               $("#sign-Up").toggleClass("is-active");
-              $("#invalid-userpass").slideUp();
-              $("#user-already-exists").slideUp();
+              $("#sign-Up").find("#char-warning").slideUp();
+              $("#sign-Up").find("#user-already-exists").slideUp();
             }
           });
-        } else {
-          $("#invalid-userpass").slideDown();
+        }else {
+          $("#sign-Up").find("#char-warning").slideDown();
         }
+      } else if ($(element).attr("id") == "logIn") {
+        var username = $("#log-In").find("#username").val();
+        var password = $("#log-In").find("#password").val();
+        let regex = /[^0-9A-Z ]/i;
+
+        if (!regex.test(username) && !regex.test(password)) {
+          var xhr = $.get(
+            "/command?cmd=log_in&username=" + username + "&pass=" + password
+          ).done(function () {
+            return;
+          });
+        }else {
+          $("#log-In").find("#char-warning").slideDown();
+        }
+
+        console.log(username, password);
       }
 
       $(element).toggleClass("is-loading");
